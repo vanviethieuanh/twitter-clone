@@ -4,15 +4,27 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth.models import User
-from .models import Post
+from .models import Post, FollowConnect
 
 from json import loads
 
-from twitter.serializers import PostSerializer
+from twitter.serializers import PostSerializer, FollowingSerializer
 
 class AllPost(APIView):
     def get(self, request):
         serializer = PostSerializer(Post.objects.all(), many=True)
+        return Response(serializer.data)
+
+class FollowingPosts(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request):
+        user = JWTAuthentication().authenticate(request=request)[0]
+
+        following = FollowConnect.objects.filter(follower=user).values('following')
+
+        posts = Post.objects.filter(author__in=following)
+
+        serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
 class Tweet(APIView):
@@ -26,20 +38,28 @@ class Tweet(APIView):
         post.save()
 
         return Response(PostSerializer(post).data)
-        pass
-    pass
 
-# @api_view(['POST'])
-# def Tweet(request):
-#     header = JWTAuthentication().get_header(request)
-#     if header is None:
-#         return None
+class Follow(APIView):
+    permission_classes = (IsAuthenticated,)
+    def post(self, request):
+        user = JWTAuthentication().authenticate(request=request)[0]
+        
+        if FollowConnect.objects.filter(follower=user, following=User.objects.get(pk=loads(request.body)['follow_id'])).count() >= 1:
+            return Response({"message":"Follwed"})
 
-#     raw_token = JWTAuthentication().get_raw_token(header)
-#     if raw_token is None:
-#         return None
+        follow = Follow()
+        follow.follower = user
+        follow.following = User.objects.get(pk=loads(request.body)['follow_id'])
+        follow.save()        
 
-#     validated_token = JWTAuthentication().get_validated_token(raw_token)
-#     print(validated_token)
+        return Response({"message":"Follwed"})
 
-#     return Response({})
+class Following(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request):
+        user = JWTAuthentication().authenticate(request=request)[0]
+        followings = FollowConnect.objects.filter(follower=user)
+
+        serializer = FollowingSerializer((followings), many=True)
+
+        return Response(serializer.data)

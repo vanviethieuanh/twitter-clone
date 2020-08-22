@@ -20,16 +20,10 @@ class Register(APIView):
         f_name      = data['first_name']
         password    = data['password']
         email       = data['email']
-
-        user = User()
-        user.username = email
-        user.password = password
-
-        user.email = email
+ 
+        user = User.objects.create_user(email,email,password)
         user.last_name = l_name
         user.first_name = f_name
-
-        user.save()
 
         return Response(self.get_tokens_for_user(user))
 
