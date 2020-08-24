@@ -1,9 +1,19 @@
 <template>
   <v-container class="container">
-    <p class="font-weight-light text-h4">
-      {{ userInfo.first_name }} {{ userInfo.last_name }}
-    </p>
-    <p class="font-weight-medium text-subtitle-1">
+    <v-container class="d-flex  pa-0 mt-10 align-center">
+      <p class="font-weight-light text-h5 mb-0 mr-5">
+        {{ userInfo.first_name }} {{ userInfo.last_name }}
+      </p>
+      <v-btn
+        depressed
+        small
+        color="blue darken-1 white--text"
+        class="ma-0"
+        :disabled="userId === this.$store.getters.getUserId"
+        >Follow</v-btn
+      >
+    </v-container>
+    <p class="font-weight-medium text-subtitle-1 pt-0">
       {{ userInfo.username }}
     </p>
     <v-container class="d-flex justify-space-between pa-0">
@@ -17,14 +27,6 @@
         <b>{{ userInfo.followings }}</b> following
       </p>
     </v-container>
-    <v-btn
-      depressed
-      small
-      color="blue darken-1 white--text"
-      class="ma-0"
-      :disabled="userId === this.$store.getters.getUserId"
-      >Follow</v-btn
-    >
   </v-container>
 </template>
 
@@ -66,6 +68,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .container {
-  max-width: 400px;
+  max-width: 350px;
 }
 </style>

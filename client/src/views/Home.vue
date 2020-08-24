@@ -40,6 +40,7 @@
                 append-icon="mdi-send"
                 @click:append="send"
                 v-if="isOn !== 'User'"
+                v-model="post"
               ></v-textarea>
             </v-form>
 
@@ -86,12 +87,14 @@
 import Explore from '@/components/Explore.vue'
 import FollowTweet from '@/components/FollowTweet.vue'
 import User from '@/components/User.vue'
+import Api from '@/services/api.js'
 
 export default {
   data() {
     return {
       isOn: 'Explore',
-      viewUserId: -1
+      viewUserId: -1,
+      post: null
     }
   },
   components: {
@@ -101,7 +104,19 @@ export default {
   },
   methods: {
     send() {
-      console.log('sent')
+      console.log(this.post)
+      Api.JWTAuth()
+        .post('posts/tweet', {
+          post: this.post
+        })
+        .then(() => {})
+        .catch(error => {
+          if (error.response.status === 401) {
+            this.$router.push('/')
+          }
+        })
+      this.post = ''
+      this.blur()
     },
     show_user(id) {
       this.isOn = 'User'

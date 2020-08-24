@@ -5,6 +5,7 @@
         v-bind:author="post.author"
         v-bind:post="post.post"
         v-bind:author_id="post.author_id"
+        v-bind:time="post.post_date"
         class="mb-4"
       />
     </div>
@@ -30,6 +31,8 @@ export default {
     }
   },
   methods: {
+    getTime() {},
+
     getPosts() {
       Api.JWTAuth()
         .get('posts/all')
