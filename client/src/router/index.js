@@ -33,7 +33,14 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
+router.beforeEach((to, from, next) => {
+  if (to.name === 'Authentication' && store.getters.isLoggedin)
+    next({ name: 'Home' })
+  else next()
 
-if (store.getters.isLoggedin) router.push('/home')
+  if (to.name !== 'Authentication' && !store.getters.isLoggedin)
+    next({ name: 'Authentication' })
+  else next()
+})
 
 export default router

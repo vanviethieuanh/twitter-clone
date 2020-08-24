@@ -8,12 +8,16 @@ from .models import Post, FollowConnect
 
 from json import loads
 
-from twitter.serializers import PostSerializer, FollowingSerializer
+from twitter.serializers import PostSerializer, FollowingSerializer, UserSerializer
 
 class AllPost(APIView):
+    permission_classes = (IsAuthenticated,)
     def get(self, request):
-        serializer = PostSerializer(Post.objects.all(), many=True)
-        return Response(serializer.data)
+        user = JWTAuthentication().authenticate(request=request)[0]
+
+        postsSerializer = PostSerializer(Post.objects.all(), many=True)
+        user = UserSerializer(user)
+        return Response({"user":user.data, "posts":postsSerializer.data})
 
 class FollowingPosts(APIView):
     permission_classes = (IsAuthenticated,)
@@ -21,11 +25,11 @@ class FollowingPosts(APIView):
         user = JWTAuthentication().authenticate(request=request)[0]
 
         following = FollowConnect.objects.filter(follower=user).values('following')
-
         posts = Post.objects.filter(author__in=following)
 
-        serializer = PostSerializer(posts, many=True)
-        return Response(serializer.data)
+        postsSerializer = PostSerializer(posts, many=True)
+        user = UserSerializer(user)
+        return Response({"user":user.data, "posts":postsSerializer.data})
 
 class Tweet(APIView):
     permission_classes = (IsAuthenticated,)
@@ -63,3 +67,23 @@ class Following(APIView):
         serializer = FollowingSerializer((followings), many=True)
 
         return Response(serializer.data)
+
+class UserInfo(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        pk = loads(request.body)['user_id']
+
+        user = User.objects.get(pk=pk)
+        
+        followings = FollowConnect.objects.filter(follower=user).count()
+        followers = FollowConnect.objects.filter(following=user).count()
+
+        posts = Post.objects.filter(author=user).count()
+
+        userInfo = UserSerializer(user).data
+        userInfo['posts'] = posts
+        userInfo['followers'] = followers
+        userInfo['followings'] = followings
+
+        return Response(userInfo)

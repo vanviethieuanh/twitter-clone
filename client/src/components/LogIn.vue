@@ -8,6 +8,7 @@
             label="E-mail"
             prepend-icon="mdi-email"
             v-model="email"
+            :error-messages="serverError"
           ></v-text-field>
           <v-text-field
             v-model="password"
@@ -18,6 +19,7 @@
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             @click:append="showPassword = !showPassword"
             :type="showPassword ? 'text' : 'password'"
+            :error-messages="serverError"
           ></v-text-field>
         </v-form>
       </v-card-text>
@@ -38,7 +40,7 @@
 </template>
 
 <script>
-import Authentication from '@/services/auth.js'
+import Api from '@/services/api.js'
 
 export default {
   name: 'LogIn',
@@ -50,16 +52,26 @@ export default {
     return {
       email: '',
       password: '',
+      serverError: [],
       showPassword: false
     }
   },
   methods: {
-    async logIn() {
-      const response = await Authentication.logIn({
-        username: this.email,
-        password: this.password
-      })
-      this.$store.commit('setToken', response.data.access)
+    logIn() {
+      Api.Public()
+        .post('login/token', {
+          username: this.email,
+          password: this.password
+        })
+        .then(response => {
+          this.$store.dispatch('setToken', response.data.access).then(() => {
+            this.$router.push('home')
+          })
+        })
+        .catch(err => {
+          if (err.response.status === 401)
+            this.serverError.push('Email or password wrong!')
+        })
     }
   }
 }

@@ -24,6 +24,7 @@ class Register(APIView):
         user = User.objects.create_user(email,email,password)
         user.last_name = l_name
         user.first_name = f_name
+        user.save()
 
         return Response(self.get_tokens_for_user(user))
 
@@ -34,4 +35,5 @@ class Register(APIView):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }
+
 

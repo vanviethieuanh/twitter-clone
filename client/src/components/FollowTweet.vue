@@ -4,7 +4,7 @@
       <Post v-bind:author="post.author" v-bind:post="post.post" class="mb-4" />
     </div>
     <v-container v-if="!posts.length" class="d-flex mx-auto justify-center">
-      <p>Let's be the first people there!</p>
+      <p>Follow more people to get more post!</p>
     </v-container>
   </div>
 </template>
@@ -14,20 +14,19 @@ import Post from '@/components/Post'
 import Api from '@/services/api.js'
 
 export default {
-  name: 'Explore',
+  name: 'FollowingTweet',
   components: {
     Post
   },
   data() {
     return {
-      posts: [],
-      user: {}
+      posts: []
     }
   },
   methods: {
     getPosts() {
       Api.JWTAuth()
-        .get('posts/all')
+        .get('posts/following')
         .then(res => {
           console.log(res.data)
           this.user = res.data.user
@@ -38,8 +37,7 @@ export default {
 
           this.$store.commit('setUserInfo', {
             fullName: fullName,
-            email: res.data.user.username,
-            id: res.data.user.id
+            email: res.data.user.username
           })
         })
         .catch(err => {

@@ -20,7 +20,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
-from server.views import Register
+from server.views import *
 
 urlpatterns = [
     path('',include('twitter.urls')),

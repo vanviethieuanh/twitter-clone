@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import Authentication from '@/services/auth.js'
+import Api from '@/services/api.js'
 
 export default {
   name: 'Register',
@@ -98,14 +98,19 @@ export default {
     }
   },
   methods: {
-    async Register() {
-      const response = await Authentication.register({
-        last_name: this.last_name,
-        first_name: this.first_name,
-        email: this.email,
-        password: this.password
-      })
-      console.log(response.data.acess)
+    Register() {
+      Api.Public()
+        .post('register', {
+          last_name: this.last_name,
+          first_name: this.first_name,
+          email: this.email,
+          password: this.password
+        })
+        .then(response => {
+          this.$store.dispatch('setToken', response.data.access).then(() => {
+            this.$router.push('home')
+          })
+        })
     }
   }
 }

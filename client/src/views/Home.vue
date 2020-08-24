@@ -2,12 +2,22 @@
   <div class="page">
     <v-app-bar fixed flat color="white" dense>
       <v-container grid-list-xs max-width="900">
-        <v-row>
+        <v-row class="mx-auto align-center">
           <h1>Twitter Clone</h1>
           <v-spacer></v-spacer>
-          <v-btn text @click="show_home()">Home</v-btn>
-          <v-btn text @click="show_explore()">Explore</v-btn>
-          <v-btn text @click="go_user()">example@user.com</v-btn>
+          <v-btn text @click="show_home">Home</v-btn>
+          <v-btn text @click="show_explore">Explore</v-btn>
+          <v-btn text @click="show_current_user">{{
+            this.$store.getters.getUserEmail
+          }}</v-btn>
+          <v-tooltip bottom
+            ><template v-slot:activator="{ on, attrs }">
+              <v-btn icon x-small v-bind="attrs" v-on="on">
+                <v-icon>mdi-login</v-icon>
+              </v-btn>
+            </template>
+            <span>log out</span>
+          </v-tooltip>
         </v-row>
       </v-container>
     </v-app-bar>
@@ -29,10 +39,13 @@
                 clearable
                 append-icon="mdi-send"
                 @click:append="send"
+                v-if="isOn !== 'User'"
               ></v-textarea>
             </v-form>
 
-            <Explore />
+            <Explore v-if="isOn === 'Explore'" />
+            <FollowTweet v-if="isOn === 'Home'" />
+            <User v-if="isOn === 'User'" :userId="viewUserId" />
           </v-col>
           <v-col cols="4" class="hidden-sm-and-down">
             <v-card
@@ -45,9 +58,11 @@
               <v-card-text>
                 <a @click="go_user()">
                   <div class="font-weight-black">
-                    example@user.com
+                    {{ this.$store.getters.getUserEmail }}
                   </div>
-                  <div class="font-weight-normal">Example User</div>
+                  <div class="font-weight-normal">
+                    {{ this.$store.getters.getUserFullName }}
+                  </div>
                 </a>
                 <div class="project-des text--disabled text-caption mt-5">
                   This project is for educational purposes. The target is
@@ -68,17 +83,39 @@
 </template>
 
 <script>
-import Explore from '@/components/Explore'
+import Explore from '@/components/Explore.vue'
+import FollowTweet from '@/components/FollowTweet.vue'
+import User from '@/components/User.vue'
+
 export default {
+  data() {
+    return {
+      isOn: 'Explore',
+      viewUserId: -1
+    }
+  },
   components: {
-    Explore
+    Explore,
+    FollowTweet,
+    User
   },
   methods: {
     send() {
       console.log('sent')
     },
-    go_user() {
-      console.log('this_user')
+    show_user(id) {
+      this.isOn = 'User'
+      this.viewUserId = id
+    },
+    show_home() {
+      this.isOn = 'Home'
+    },
+    show_explore() {
+      this.isOn = 'Explore'
+    },
+    show_current_user() {
+      this.isOn = 'User'
+      this.viewUserId = this.$store.getters.getUserId
     }
   },
   computed: {
