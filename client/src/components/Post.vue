@@ -1,7 +1,9 @@
 <template>
   <v-card class="mx-auto pa-1" max-width="600" outlined>
     <v-card-text>
-      <p class="mb-3 font-weight-bold">{{ author }}</p>
+      <a @click="authorInfo">
+        <p color="grey darken-4">{{ author }}</p>
+      </a>
       <p class="mb-0">{{ post }}</p>
     </v-card-text>
   </v-card>
@@ -9,10 +11,22 @@
 
 <script>
 export default {
+  model: {
+    event: 'view-author'
+  },
+  methods: {
+    authorInfo() {
+      this.$parent.$emit('view-author', this.author_id)
+    }
+  },
   props: {
     author: {
       type: String,
       default: 'Author'
+    },
+    author_id: {
+      type: Number,
+      default: -1
     },
     post: {
       type: String,
@@ -24,4 +38,11 @@ export default {
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+a {
+  p {
+    color: #424242 !important;
+    font-weight: bold;
+  }
+}
+</style>

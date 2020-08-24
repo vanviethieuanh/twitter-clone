@@ -1,7 +1,12 @@
 <template>
   <div>
     <div v-for="post in posts" :key="post.id">
-      <Post v-bind:author="post.author" v-bind:post="post.post" class="mb-4" />
+      <Post
+        v-bind:author="post.author"
+        v-bind:post="post.post"
+        v-bind:author_id="post.author_id"
+        class="mb-4"
+      />
     </div>
     <v-container v-if="!posts.length" class="d-flex mx-auto justify-center">
       <p>Let's be the first people there!</p>

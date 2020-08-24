@@ -43,8 +43,8 @@
               ></v-textarea>
             </v-form>
 
-            <Explore v-if="isOn === 'Explore'" />
-            <FollowTweet v-if="isOn === 'Home'" />
+            <Explore v-if="isOn === 'Explore'" v-on:view-author="show_user" />
+            <FollowTweet v-if="isOn === 'Home'" v-on:view-author="show_user" />
             <User v-if="isOn === 'User'" :userId="viewUserId" />
           </v-col>
           <v-col cols="4" class="hidden-sm-and-down">

@@ -1,16 +1,34 @@
 <template>
-  <v-container grid-list-xs>
-    <v-card> </v-card>
+  <v-container class="container">
+    <p class="font-weight-light text-h4">
+      {{ userInfo.first_name }} {{ userInfo.last_name }}
+    </p>
+    <p class="font-weight-medium text-subtitle-1">
+      {{ userInfo.username }}
+    </p>
+    <v-container class="d-flex justify-space-between pa-0">
+      <p>
+        <b>{{ userInfo.posts }}</b> posts
+      </p>
+      <p>
+        <b>{{ userInfo.followers }}</b> followers
+      </p>
+      <p>
+        <b>{{ userInfo.followings }}</b> following
+      </p>
+    </v-container>
+    <v-btn
+      depressed
+      small
+      color="blue darken-1 white--text"
+      class="ma-0"
+      :disabled="userId === this.$store.getters.getUserId"
+      >Follow</v-btn
+    >
   </v-container>
 </template>
 
 <script>
-// "username": "accodius@vanviet.clan",
-// "first_name": " de Van",
-// "last_name": "Accodius",
-// "posts": 2,
-// "followers": 1,
-// "followings": 0
 import Api from '@/services/api.js'
 
 export default {
@@ -46,5 +64,8 @@ export default {
   }
 }
 </script>
-
-<style></style>
+<style lang="scss" scoped>
+.container {
+  max-width: 400px;
+}
+</style>
