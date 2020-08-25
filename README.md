@@ -2,9 +2,7 @@
 
 > This project is for educational purposes 📖
 >
-> The target is learning Vue framework,
->
-> and technique of backend to implement a SPA website 🔥
+> The target is learning Vue framework, and technique of backend to implement a SPA website 🔥
 >
 > Welcome technical exchange, if this project has mistake of code or concept of programming, let me know, thanks ❤️
 
