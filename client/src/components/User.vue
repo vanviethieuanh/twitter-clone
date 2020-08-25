@@ -9,8 +9,10 @@
         small
         color="blue darken-1 white--text"
         class="ma-0"
-        :disabled="userId === this.$store.getters.getUserId"
-        >Follow</v-btn
+        :disabled="isDisableFollowButton"
+        @click="follow"
+        :outlined="userInfo.is_following"
+        >{{ followButtonText }}</v-btn
       >
     </v-container>
     <p class="font-weight-medium text-subtitle-1 pt-0">
@@ -45,6 +47,19 @@ export default {
       default: -1
     }
   },
+  computed: {
+    isDisableFollowButton() {
+      const isThisUser = this.userId === this.$store.getters.getUserId
+
+      return isThisUser
+    },
+    followButtonText() {
+      const isThisUser = this.userId === this.$store.getters.getUserId
+      const isFollowing = this.userInfo.is_following
+      if (!isThisUser && isFollowing) return 'Unfollow'
+      else return 'Follow'
+    }
+  },
   methods: {
     getInfo() {
       Api.JWTAuth()
@@ -59,6 +74,36 @@ export default {
             this.$router.push('/')
           }
         })
+    },
+    follow() {
+      const isFollowing = this.userInfo.is_following
+      if (!isFollowing) {
+        Api.JWTAuth()
+          .post('follow/follow', {
+            follow_id: this.userId
+          })
+          .then(() => {
+            this.userInfo.is_following = true
+          })
+          .catch(error => {
+            if (error.response.status === 401) {
+              this.$router.push('/')
+            }
+          })
+      } else {
+        Api.JWTAuth()
+          .post('follow/unfollow', {
+            follow_id: this.userId
+          })
+          .then(() => {
+            this.userInfo.is_following = false
+          })
+          .catch(error => {
+            if (error.response.status === 401) {
+              this.$router.push('/')
+            }
+          })
+      }
     }
   },
   mounted() {

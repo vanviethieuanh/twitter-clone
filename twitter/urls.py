@@ -8,6 +8,7 @@ urlpatterns = [
 
     path("follow/following", Following.as_view(), name="following"),
     path("follow/follow", Follow.as_view(), name="follow"),
+    path("follow/unfollow", Unfollow.as_view(), name="unfollow"),
     path('user/info', UserInfo.as_view(), name='user-detail'),
 
 ]

@@ -51,10 +51,10 @@ class Follow(APIView):
         if FollowConnect.objects.filter(follower=user, following=User.objects.get(pk=loads(request.body)['follow_id'])).count() >= 1:
             return Response({"message":"Follwed"})
 
-        follow = Follow()
+        follow = FollowConnect()
         follow.follower = user
         follow.following = User.objects.get(pk=loads(request.body)['follow_id'])
-        follow.save()        
+        follow.save()     
 
         return Response({"message":"Follwed"})
 
@@ -74,16 +74,28 @@ class UserInfo(APIView):
     def post(self, request):
         pk = loads(request.body)['user_id']
 
-        user = User.objects.get(pk=pk)
+        target = User.objects.get(pk=pk)
+        user = JWTAuthentication().authenticate(request=request)[0]
         
-        followings = FollowConnect.objects.filter(follower=user).count()
-        followers = FollowConnect.objects.filter(following=user).count()
+        followings = FollowConnect.objects.filter(follower=target).count()
+        followers = FollowConnect.objects.filter(following=target).count()
 
-        posts = Post.objects.filter(author=user).count()
+        posts = Post.objects.filter(author=target).count()
 
-        userInfo = UserSerializer(user).data
+        userInfo = UserSerializer(target).data
         userInfo['posts'] = posts
         userInfo['followers'] = followers
         userInfo['followings'] = followings
+        userInfo['is_following'] = (FollowConnect.objects.filter(follower=user, following=target).count() == 1)
 
         return Response(userInfo)
+
+class Unfollow(APIView):
+    permission_classes = (IsAuthenticated,)
+    def post(self, request):
+        user = JWTAuthentication().authenticate(request=request)[0]
+        target = User.objects.get(pk=loads(request.body)['follow_id'])
+        
+        FollowConnect.objects.filter(follower = user, following=target).delete()
+
+        return Response({"message": "Unfollowed"})
