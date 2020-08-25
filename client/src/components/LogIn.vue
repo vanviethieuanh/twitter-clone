@@ -8,7 +8,7 @@
             label="E-mail"
             prepend-icon="mdi-email"
             v-model="email"
-            :error-messages="serverError"
+            :error="isWrongPassword"
           ></v-text-field>
           <v-text-field
             v-model="password"
@@ -24,7 +24,13 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="blue" depressed dark @click="logIn">Sign In</v-btn>
+        <v-btn
+          color="blue white--text"
+          depressed
+          @click="logIn"
+          :disabled="disableSignIn"
+          >Sign In</v-btn
+        >
         <v-spacer></v-spacer>
         <v-btn
           color="blue darken-3"
@@ -54,6 +60,15 @@ export default {
       password: '',
       serverError: [],
       showPassword: false
+    }
+  },
+  computed: {
+    isWrongPassword() {
+      return this.serverError.length >= 1
+    },
+    disableSignIn() {
+      if (this.email.length * this.password.length > 0) return false
+      else return true
     }
   },
   methods: {

@@ -26,6 +26,7 @@ urlpatterns = [
     path('',include('twitter.urls')),
 
     path("register", Register.as_view(), name="register"),
+    path("used/email", isUsedEmail.as_view(), name="isUsedEmail"),
 
     path('login/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('login/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),

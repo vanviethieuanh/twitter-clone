@@ -3,7 +3,7 @@
     <v-card width="400" class="mx-auto justify-center pa-6" outlined>
       <h1>Register</h1>
       <v-card-text>
-        <v-form>
+        <v-form ref="form" v-model="valid" :lazy-validation="lazy">
           <v-row>
             <v-col>
               <v-text-field
@@ -11,6 +11,7 @@
                 label="First Name"
                 :rules="nameRules"
                 v-model.trim="first_name"
+                required
               ></v-text-field>
             </v-col>
             <v-col>
@@ -19,6 +20,7 @@
                 label="Last Name"
                 :rules="nameRules"
                 v-model.trim="last_name"
+                required
               ></v-text-field>
             </v-col>
           </v-row>
@@ -28,11 +30,15 @@
             label="E-mail"
             prepend-icon="mdi-email"
             :rules="emailRules"
+            @blur="checkUsedEmail"
+            required
+            :error-messages="UsedEmail"
           ></v-text-field>
           <v-text-field
             v-model="password"
             prepend-icon="mdi-lock"
             name="password"
+            required
             label="Enter your password"
             :rules="passwordRules"
             hint="At least 8 characters"
@@ -53,11 +59,11 @@
         >
         <v-spacer></v-spacer>
         <v-btn
-          color="blue"
+          color="blue white--text"
           class="ml-2"
           v-on:click="Register(first_name, last_name, email, password)"
           depressed
-          dark
+          :disabled="!valid"
           >Sign Up</v-btn
         >
       </v-card-actions>
@@ -76,13 +82,16 @@ export default {
 
   data() {
     return {
+      valid: true,
+      lazy: false,
+
       first_name: '',
       last_name: '',
       email: '',
       password: '',
+      UsedEmail: null,
 
       showPassword: false,
-      nameRules: [value => !!value || 'Required.'],
       emailRules: [
         value => !!value || 'Required.',
         value => (value || '').length <= 30 || 'Max 30 characters',
@@ -97,8 +106,32 @@ export default {
       ]
     }
   },
+  watch: {
+    email() {
+      this.UsedEmail = null
+    }
+  },
   methods: {
+    validate() {
+      this.$refs.form.validate()
+    },
+    checkUsedEmail() {
+      Api.Public()
+        .post('used/email', {
+          email: this.email
+        })
+        .then(response => {
+          if (response.data.isTaken === 0) {
+            this.UsedEmail = null
+            return true
+          } else {
+            this.UsedEmail = 'This email have been taken!'
+            return false
+          }
+        })
+    },
     Register() {
+      if (!this.checkUsedEmail()) return
       Api.Public()
         .post('register', {
           last_name: this.last_name,

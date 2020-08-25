@@ -36,4 +36,9 @@ class Register(APIView):
             'access': str(refresh.access_token),
         }
 
+class isUsedEmail(APIView):
+    def post(self, request):
+        data = loads(request.body)
+        return Response({"isTaken":User.objects.filter(username=data['email']).count()})
+
 
