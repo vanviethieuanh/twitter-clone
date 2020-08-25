@@ -29,9 +29,9 @@ export default {
 
       let time = 'now'
 
-      const minutes = Math.round(diff / 60000)
-      const hours = Math.round(diff / (60000 * 60))
-      const days = Math.round(diff / (60000 * 60 * 24))
+      const minutes = Math.floor(diff / 60000)
+      const hours = Math.floor(diff / (60000 * 60))
+      const days = Math.floor(diff / (60000 * 60 * 24))
 
       if (minutes == 1) time = `${minutes} min`
       if (minutes > 1) time = `${minutes} mins`

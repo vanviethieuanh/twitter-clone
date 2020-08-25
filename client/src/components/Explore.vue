@@ -26,8 +26,12 @@ export default {
   },
   data() {
     return {
-      posts: [],
       user: {}
+    }
+  },
+  computed: {
+    posts() {
+      return this.$store.getters.getExplorePosts
     }
   },
   methods: {
@@ -39,7 +43,7 @@ export default {
         .then(res => {
           console.log(res.data)
           this.user = res.data.user
-          this.posts = res.data.posts
+          this.$store.commit('setExplorePosts', res.data.posts)
 
           const fullName =
             res.data.user.first_name + ' ' + res.data.user.last_name

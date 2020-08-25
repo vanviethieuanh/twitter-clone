@@ -12,7 +12,7 @@
           }}</v-btn>
           <v-tooltip bottom
             ><template v-slot:activator="{ on, attrs }">
-              <v-btn icon x-small v-bind="attrs" v-on="on">
+              <v-btn icon x-small v-bind="attrs" v-on="on" @click="logOut">
                 <v-icon>mdi-login</v-icon>
               </v-btn>
             </template>
@@ -109,14 +109,16 @@ export default {
         .post('posts/tweet', {
           post: this.post
         })
-        .then(() => {})
+        .then(res => {
+          this.post = ''
+          console.log(res.data)
+          this.$store.commit('addPost', res.data)
+        })
         .catch(error => {
           if (error.response.status === 401) {
             this.$router.push('/')
           }
         })
-      this.post = ''
-      this.blur()
     },
     show_user(id) {
       this.isOn = 'User'
@@ -131,6 +133,10 @@ export default {
     show_current_user() {
       this.isOn = 'User'
       this.viewUserId = this.$store.getters.getUserId
+    },
+    logOut() {
+      this.$store.commit('logOut')
+      this.$router.push('/')
     }
   },
   computed: {

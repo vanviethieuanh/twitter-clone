@@ -84,6 +84,7 @@ export default {
           })
           .then(() => {
             this.userInfo.is_following = true
+            this.userInfo.followers++
           })
           .catch(error => {
             if (error.response.status === 401) {
@@ -97,6 +98,7 @@ export default {
           })
           .then(() => {
             this.userInfo.is_following = false
+            this.userInfo.followers--
           })
           .catch(error => {
             if (error.response.status === 401) {
@@ -113,6 +115,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .container {
-  max-width: 350px;
+  max-width: 400px;
 }
 </style>
