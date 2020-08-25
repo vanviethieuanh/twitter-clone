@@ -9,7 +9,6 @@
               <v-text-field
                 name="f_name"
                 label="First Name"
-                :rules="nameRules"
                 v-model.trim="first_name"
                 required
               ></v-text-field>
@@ -18,7 +17,6 @@
               <v-text-field
                 name="l_name"
                 label="Last Name"
-                :rules="nameRules"
                 v-model.trim="last_name"
                 required
               ></v-text-field>
@@ -61,7 +59,7 @@
         <v-btn
           color="blue white--text"
           class="ml-2"
-          v-on:click="Register(first_name, last_name, email, password)"
+          v-on:click="Register()"
           depressed
           :disabled="!valid"
           >Sign Up</v-btn
@@ -115,23 +113,25 @@ export default {
     validate() {
       this.$refs.form.validate()
     },
-    checkUsedEmail() {
+    async checkUsedEmail() {
       Api.Public()
         .post('used/email', {
           email: this.email
         })
         .then(response => {
-          if (response.data.isTaken === 0) {
+          if (response.data.isTaken == 0) {
             this.UsedEmail = null
-            return true
+            return false
           } else {
             this.UsedEmail = 'This email have been taken!'
-            return false
+            return true
           }
         })
     },
-    Register() {
-      if (!this.checkUsedEmail()) return
+    async Register() {
+      const used = await this.checkUsedEmail()
+      if (used) return
+
       Api.Public()
         .post('register', {
           last_name: this.last_name,

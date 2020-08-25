@@ -4,28 +4,71 @@
       <v-container grid-list-xs max-width="900">
         <v-row class="mx-auto align-center">
           <h1>Twitter Clone</h1>
-          <v-spacer></v-spacer>
-          <v-btn text @click="show_home">Home</v-btn>
-          <v-btn text @click="show_explore">Explore</v-btn>
-          <v-btn text @click="show_current_user">{{
-            this.$store.getters.getUserEmail
-          }}</v-btn>
-          <v-tooltip bottom
-            ><template v-slot:activator="{ on, attrs }">
-              <v-btn icon x-small v-bind="attrs" v-on="on" @click="logOut">
-                <v-icon>mdi-login</v-icon>
-              </v-btn>
-            </template>
-            <span>log out</span>
-          </v-tooltip>
+
+          <v-spacer class="hidden-xs-only"></v-spacer>
+          <div class="hidden-xs-only">
+            <v-btn text @click="show_home">Home</v-btn>
+            <v-btn text @click="show_explore">Explore</v-btn>
+            <v-btn text @click="show_current_user">{{
+              this.$store.getters.getUserEmail
+            }}</v-btn>
+            <v-tooltip bottom
+              ><template v-slot:activator="{ on, attrs }">
+                <v-btn icon x-small v-bind="attrs" v-on="on" @click="logOut">
+                  <v-icon>mdi-login</v-icon>
+                </v-btn>
+              </template>
+              <span>log out</span>
+            </v-tooltip>
+          </div>
+
+          <v-spacer class="hidden-sm-and-up"></v-spacer>
+          <v-app-bar-nav-icon
+            @click="drawer = true"
+            class="hidden-sm-and-up"
+          ></v-app-bar-nav-icon>
         </v-row>
       </v-container>
     </v-app-bar>
+    <v-navigation-drawer v-model="drawer" absolute temporary>
+      <v-list nav>
+        <v-list-item-group active-class="deep-purple--text text--accent-4">
+          <v-list-item @click="show_explore">
+            <v-list-item-icon>
+              <span class="material-icons">
+                whatshot
+              </span>
+            </v-list-item-icon>
+            <v-list-item-title>Explore</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item @click="show_home">
+            <v-list-item-icon>
+              <span class="material-icons">
+                home
+              </span>
+            </v-list-item-icon>
+            <v-list-item-title>Home</v-list-item-title>
+          </v-list-item>
+
+          <v-list-item @click="show_current_user">
+            <v-list-item-icon>
+              <span class="material-icons">
+                face
+              </span>
+            </v-list-item-icon>
+            <v-list-item-title>{{
+              this.$store.getters.getUserEmail
+            }}</v-list-item-title>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
     <div class="content pt-8 mt-14">
       <v-container class="mx-auto"
         ><v-row justify="center" dense>
           <v-col cols="column">
-            <v-form max-width="600">
+            <v-form style="max-width:600px; margin:auto">
               <v-textarea
                 class="mb-5"
                 maxlength="280"
@@ -57,7 +100,7 @@
               fixed
             >
               <v-card-text>
-                <a @click="go_user()">
+                <a @click="show_current_user">
                   <div class="font-weight-black">
                     {{ this.$store.getters.getUserEmail }}
                   </div>
@@ -94,7 +137,8 @@ export default {
     return {
       isOn: 'Explore',
       viewUserId: -1,
-      post: null
+      post: null,
+      drawer: false
     }
   },
   components: {
