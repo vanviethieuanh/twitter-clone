@@ -109,13 +109,12 @@
                   </div>
                 </a>
                 <div class="project-des text--disabled text-caption mt-5">
-                  This project is for educational purposes. The target is
+                  This project is for educational purposes 📖 The target is
                   learning Vue framework, and technique of backend to implement
-                  a SPA website. For the source code, check out the
+                  a SPA website 🔥 For the source code, check out the
                   <a href="https://github.com/vanviethieuanh/twitter-clone"
                     >repo</a
                   >
-                  .
                 </div>
               </v-card-text>
             </v-card>
