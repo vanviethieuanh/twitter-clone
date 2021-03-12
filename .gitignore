@@ -1,0 +1,60 @@
+# dependencies
+**/node_modules
+/.well_known
+
+/archive
+
+# e2e
+**/e2e/*.js
+**/e2e/*.map
+
+# compiled output
+**/dist
+**/tmp
+**/out-tsc
+.firebase
+public
+
+# IDEs and editors
+.idea
+.project
+.classpath
+.c9
+.settings
+.vscode
+*.launch
+*.sublime-workspace
+
+# misc
+.env
+.sass-cache
+NOTES.md
+ROADMAP.md
+secrets.json
+connect.lock
+resources
+archive
+coverage
+typings
+libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+
+# system files
+.DS_Store
+Thumbs.db
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
