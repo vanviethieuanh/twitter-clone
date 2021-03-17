@@ -8,7 +8,16 @@
 
 ---
 
+### Demo
+![Demo](https://www.loom.com/share/af75f71d80484b2d81832a4db89b25fb)
+
 ### Technology
+-   **How to run it**
+    -   Docker
+        ```bash
+        # Install Docker then run bellow command. Go to http://localhost:8080/ 🥳
+        docker-compose -f docker-compose-deploy.yml up
+        ```
 
 -   **Server** django
 
@@ -36,3 +45,5 @@
 -   Login
 -   Post
 -   Follow
+
+*All RESTful* ❤️
