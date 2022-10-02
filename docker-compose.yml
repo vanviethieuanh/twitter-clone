@@ -5,6 +5,19 @@ networks:
     name: general_network
 
 services:
+  # Database
+  database:
+    container_name: mysql-database
+    image: mysql:8.0.30-debian
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    ports:
+      - '3300:3306'
+    env_file:
+      - ./server/mysql.env
+    networks:
+      - general_network
+
   # # Portal
   # client:
   #   build: ./client
@@ -12,9 +25,14 @@ services:
   # API server
   server:
     build: ./server
+    restart: always
     ports:
       - '5000:8080'
-    env_file: ./server/server.env
+    env_file: 
+      - ./server/server.env
+      - ./server/mysql.env
+    depends_on:
+      - database
     networks:
       - general_network
 

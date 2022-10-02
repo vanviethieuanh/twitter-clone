@@ -3,10 +3,10 @@ FROM python:3.8-alpine as app-stage
 WORKDIR /app
 
 # Install utils
-RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers musl-dev libffi-dev
+RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers musl-dev libffi-dev mariadb-dev
 RUN pip install -U cffi pip setuptools
 
-# Install requirements & remove cache
+# Install requirements
 COPY ./requirements.txt ./requirements.txt
 RUN pip3 install --no-cache-dir -r ./requirements.txt
 
