@@ -1,5 +1,4 @@
-# dependencies
-**/node_modules
+*sqlite*
 
 # system files
 .DS_Store
@@ -9,3 +8,7 @@ Thumbs.db
 __pycache__/
 *.py[cod]
 *$py.class
+
+# local env files
+.env.local
+.env.*.local

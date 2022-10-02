@@ -1,3 +1,8 @@
+# Log files
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
 # dependencies
 **/node_modules
 /.well_known
@@ -40,23 +45,3 @@ libpeerconnection.log
 npm-debug.log
 yarn-error.log
 testem.log
-
-# system files
-.DS_Store
-Thumbs.db
-
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
-# local env files
-.env.local
-.env.*.local
-
-# Log files
-npm-debug.log*
-yarn-debug.log*
-pnpm-debug.log*
-
-env

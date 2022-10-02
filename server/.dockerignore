@@ -9,3 +9,6 @@ dockerfile
 
 # SQLite
 *.sqlite*
+
+# Git
+.gitignore

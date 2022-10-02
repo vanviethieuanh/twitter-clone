@@ -14,7 +14,7 @@ services:
     build: ./server
     ports:
       - '5000:8080'
-    env_file: app.env
+    env_file: ./server/server.env
     networks:
       - general_network
 
