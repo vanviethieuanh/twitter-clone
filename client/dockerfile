@@ -1,0 +1,31 @@
+FROM node:14.16.0-alpine3.10 as build-stage
+
+# Create user for later debug
+USER root
+RUN adduser -D daemon && chown -R daemon /myapp-data
+
+# Install http-server for serve
+RUN npm install -g http-server
+
+# Set working directory
+WORKDIR /app
+
+# Install packages
+COPY ./client/package*.json ./
+COPY ./client/vue.config.js ./
+RUN npm install
+
+# Build dist
+COPY ./client/ .
+RUN npm run build
+
+# Remove unused directories
+RUN rm -rf ./srcs
+RUN rm -rf ./build
+
+# Set user to daemon
+USER daemon
+
+# Serve
+EXPOSE 8080
+CMD [ "http-server", "dist" ]
