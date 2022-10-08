@@ -3,7 +3,8 @@ FROM python:3.8-alpine as app-stage
 WORKDIR /app
 
 # Install utils
-RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers musl-dev libffi-dev mariadb-dev
+RUN apk add --update --no-cache --virtual .tmp gcc libc-dev linux-headers musl-dev libffi-dev
+RUN apk add --no-cache mariadb-dev mariadb-client mariadb-connector-c
 RUN pip install -U cffi pip setuptools
 
 # Install requirements
@@ -16,6 +17,8 @@ RUN apk del .tmp
 # Copy Source
 COPY . /app
 
+RUN chmod +x /app/entrypoint.sh
+
 # Create static volume
 RUN mkdir -p /vol/static
 
@@ -24,4 +27,4 @@ USER daemon
 
 EXPOSE 8080
 
-CMD ["uwsgi", "--ini" , "/app/uwsgi.ini","--module","server.wsgi"]
+CMD [ "sh", "/app/entrypoint.sh" ]

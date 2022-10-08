@@ -82,12 +82,12 @@ WSGI_APPLICATION = 'server.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 DATABASES = {
     'default': {
-		'ENGINE' : 'django.db.backends.mysql',
-		'NAME' : os.environ.get('SQL_NAME', 'Twitter'),
+		'ENGINE' : 'django.db.backends.postgresql',
+		'NAME' : os.environ.get('POSTGRES_DB', 'Twitter'),
 		'HOST' : os.environ.get('SQL_HOST', '127.0.0.1'),
-		'PORT' : os.environ.get('SQL_PORT', '3306'),
-		'USER' : os.environ.get('SQL_USER', 'root'),
-		'PASSWORD' : os.environ.get('MYSQL_ROOT_PASSWORD', 'Ascending123'),
+		'PORT' : os.environ.get('SQL_PORT', '5432'),
+		'USER' : os.environ.get('SQL_USER', 'postgres'),
+		'PASSWORD' : os.environ.get('POSTGRES_PASSWORD', 'Ascending123'),
     }
 }
 
@@ -136,10 +136,6 @@ PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "client/dist/static"),
-]
-
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
@@ -155,6 +151,3 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
 }
-
-STATIC_URL = '/static/'
-STATIC_ROOT = '/vol/static'

@@ -1,22 +1,26 @@
 version: '3.7'
 
 networks:
-  general_network:
-    name: general_network
+  twitter_network:
+    name: twitter_network
+
+volumes:
+    postgres:
 
 services:
   # Database
   database:
-    container_name: mysql-database
-    image: mysql:8.0.30-debian
-    command: --default-authentication-plugin=mysql_native_password
-    restart: unless-stopped
+    container_name: postgres-database
+    image: postgres:14.5-alpine
+    restart: always
     ports:
-      - '3300:3306'
+      - '5432:5432'
     env_file:
-      - ./server/mysql.env
+      - ./server/sql.env
+    volumes:
+      - postgres:/data/postgres
     networks:
-      - general_network
+      - twitter_network
 
   # # Portal
   # client:
@@ -30,11 +34,11 @@ services:
       - '5000:8080'
     env_file: 
       - ./server/server.env
-      - ./server/mysql.env
+      - ./server/sql.env
     depends_on:
       - database
     networks:
-      - general_network
+      - twitter_network
 
   # Proxy
   proxy:
@@ -46,4 +50,4 @@ services:
     ports:
       - "80:80"
     networks:
-      - general_network
+      - twitter_network
