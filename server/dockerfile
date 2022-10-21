@@ -22,8 +22,12 @@ RUN chmod +x /app/entrypoint.sh
 # Create static volume
 RUN mkdir -p /vol/static
 
+RUN adduser -D user
+RUN chown -R user:user /vol
+RUN chmod -R 755 /vol/static
+
 # Add user
-USER daemon
+USER user
 
 EXPOSE 8080
 

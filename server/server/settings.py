@@ -151,3 +151,6 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
 }
+
+STATIC_URL = 'static/'
+STATIC_ROOT = '/vol/static'

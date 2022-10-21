@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# echo "Collecting statics ..."
-# python3 ./manage.py collectstatic --noinput
+echo "Collecting static ..."
+python3 ./manage.py collectstatic
 
 echo "Making migration ..."
 python3 ./manage.py migrate

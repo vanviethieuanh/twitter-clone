@@ -5,7 +5,8 @@ networks:
     name: twitter_network
 
 volumes:
-    postgres:
+  postgres:
+  static:  
 
 services:
   # Database
@@ -39,6 +40,8 @@ services:
       - database
     networks:
       - twitter_network
+    volumes:
+      - static:/vol/static
 
   # Proxy
   proxy:
@@ -47,6 +50,7 @@ services:
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy/uwsgi_params:/etc/nginx/uwsgi_params:ro
+      - static:/vol/static
     ports:
       - "80:80"
     networks:

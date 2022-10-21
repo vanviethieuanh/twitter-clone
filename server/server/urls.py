@@ -23,7 +23,6 @@ from rest_framework_simplejwt.views import (
 from server.views import *
 
 urlpatterns = [
-    path('', index),
     path('', include('twitter.urls')),
 
     path("register", Register.as_view(), name="register"),
