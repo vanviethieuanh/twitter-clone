@@ -8,3 +8,4 @@ uWSGI == 2.*
 argon2
 psycopg2-binary == 2.*
 django[argon2]
+drf_yasg

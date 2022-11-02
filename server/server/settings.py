@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'twitter'
+    'twitter',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [
@@ -82,12 +83,12 @@ WSGI_APPLICATION = 'server.wsgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 DATABASES = {
     'default': {
-		'ENGINE' : 'django.db.backends.postgresql',
-		'NAME' : os.environ.get('POSTGRES_DB', 'Twitter'),
-		'HOST' : os.environ.get('SQL_HOST', '127.0.0.1'),
-		'PORT' : os.environ.get('SQL_PORT', '5432'),
-		'USER' : os.environ.get('SQL_USER', 'postgres'),
-		'PASSWORD' : os.environ.get('POSTGRES_PASSWORD', 'Ascending123'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB', 'Twitter'),
+        'HOST': os.environ.get('SQL_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('SQL_PORT', '5432'),
+        'USER': os.environ.get('SQL_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'Ascending123'),
     }
 }
 
