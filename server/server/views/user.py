@@ -1,10 +1,10 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from json import loads
-from django.shortcuts import render
-from django.http import HttpResponse
 
+from json import loads
+
+from django.shortcuts import render
 from django.contrib.auth.models import User
 
 from server.validators import validate_register
