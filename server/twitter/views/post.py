@@ -4,12 +4,11 @@ from rest_framework import generics
 from rest_framework import response
 from rest_framework import permissions
 from rest_framework import views
-from rest_framework import viewsets
 
-from ..models import Post
-from ..models import Follow
+from twitter.models import Post
+from twitter.models import Follow
 
-from ..serializers import PostSerializer
+from twitter.serializers import PostSerializer
 
 
 class PostView(views.APIView):
@@ -21,61 +20,24 @@ class PostView(views.APIView):
         """
         Return a list of posts.
         """
-        follower = request.query_params.get('follower')
+        is_following_posts = request.query_params.get('following')
+        follower = request.user
 
-        if follower is not None:
+        if is_following_posts:
             follow_users = Follow.objects.filter(
-                follower=follower).values('following')
+                follower=follower
+            ).values('following')
             queryset = Post.objects.filter(author__in=follow_users)
 
         return response.Response(queryset)
 
     def post(self, request, format=None):
-        user = JWTAuthentication().authenticate(request=request)[0]
-        return response.Response()
+        author = request.user
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        post = serializer.create(author)
 
+        return response.Response(self.serializer_class(post).data)
 
-class PostListView(generics.ListAPIView):
-    """
-    Function include: Retrive a list of all post
-    """
-    serializer_class = PostSerializer
-
-    def get_queryset(self):
-        queryset = Post.objects.all()
-        follower = self.request.query_params.get('follower')
-
-        if follower is not None:
-            follow_users = Follow.objects.filter(
-                follower=follower).values('following')
-            queryset = Post.objects.filter(author__in=follow_users)
-
-        return queryset
-
-
-class FollowingPostListView(generics.ListAPIView):
-    """
-    Retrive a list of following post
-    """
-    permission_classes = permissions.IsAuthenticated
-    serializer_class = PostSerializer
-
-    def list(self, request, *args, **kwargs):
-        user = JWTAuthentication().authenticate(request=request)[0]
-
-        follow_users = Follow.objects.filter(
-            follow_user=user).values('following')
-        posts = Post.objects.filter(author__in=follow_users)
-
-        postsSerializer = PostSerializer(posts, many=True)
-        user = UserSerializer(user)
-
-        return response.Response({
-            "user": user.data,
-            "posts": postsSerializer.data
-        })
-
-
-# class PostView(generics.RetrieveUpdateDestroyAPIView):
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
+    def delete(self, request, format=None):
+        pass

@@ -1,12 +1,20 @@
 from rest_framework import serializers
 
-from ..models import Post
+from twitter.models import Post
+from authentication.models import User
 
 
 class PostSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField()
-    author_id = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta():
         model = Post
-        fields = ['author', 'author_id', 'post', 'post_date']
+        fields = ('author', 'post', 'post_date')
+        read_only_fields = ('post_date', 'author')
+
+    def create(self, author: User):
+        post = Post(
+            author=author,
+            post=self.validated_data['post']
+        )
+        post.save()
+        return post

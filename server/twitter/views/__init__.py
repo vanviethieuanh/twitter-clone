@@ -1,5 +1,5 @@
 from .follow import FollowingSerializer, FollowView
-from .post import PostListView, PostView, FollowingPostListView
+from .post import PostView
 
 from rest_framework import permissions
 from rest_framework import authentication
