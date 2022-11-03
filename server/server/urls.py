@@ -28,6 +28,7 @@ urlpatterns = [
         'swagger', cache_timeout=0), name='swagger-schema'),
 
     path('', include('twitter.urls')),
+    path('auth/', include('authentication.urls')),
 
     path("register", Register.as_view(), name="register"),
 

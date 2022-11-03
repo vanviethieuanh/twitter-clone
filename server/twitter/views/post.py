@@ -10,7 +10,6 @@ from ..models import Post
 from ..models import Follow
 
 from ..serializers import PostSerializer
-from ..serializers import UserSerializer
 
 
 class PostView(views.APIView):
@@ -33,7 +32,7 @@ class PostView(views.APIView):
 
     def post(self, request, format=None):
         user = JWTAuthentication().authenticate(request=request)[0]
-        return response.Response(UserSerializer(user).data)
+        return response.Response()
 
 
 class PostListView(generics.ListAPIView):

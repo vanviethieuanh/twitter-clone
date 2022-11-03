@@ -13,7 +13,6 @@ from ..models import Follow
 from django.contrib.auth.models import User
 
 from ..serializers import FollowingSerializer
-from ..serializers import UserSerializer
 
 
 class FollowView(generics.RetrieveUpdateDestroyAPIView):
