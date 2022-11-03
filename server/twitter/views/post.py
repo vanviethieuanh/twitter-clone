@@ -13,14 +13,45 @@ from ..serializers import PostSerializer
 from ..serializers import UserSerializer
 
 
+class PostView(views.APIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request, format=None):
+        """
+        Return a list of posts.
+        """
+        follower = request.query_params.get('follower')
+
+        if follower is not None:
+            follow_users = Follow.objects.filter(
+                follower=follower).values('following')
+            queryset = Post.objects.filter(author__in=follow_users)
+
+        return response.Response(queryset)
+
+    def post(self, request, format=None):
+        user = JWTAuthentication().authenticate(request=request)[0]
+        return response.Response(UserSerializer(user).data)
+
+
 class PostListView(generics.ListAPIView):
     """
     Function include: Retrive a list of all post
     """
-    permission_classes = permissions.IsAuthenticatedOrReadOnly
     serializer_class = PostSerializer
 
-    queryset = Post.objects.all()
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        follower = self.request.query_params.get('follower')
+
+        if follower is not None:
+            follow_users = Follow.objects.filter(
+                follower=follower).values('following')
+            queryset = Post.objects.filter(author__in=follow_users)
+
+        return queryset
 
 
 class FollowingPostListView(generics.ListAPIView):
@@ -46,6 +77,6 @@ class FollowingPostListView(generics.ListAPIView):
         })
 
 
-class PostView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
+# class PostView(generics.RetrieveUpdateDestroyAPIView):
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer

@@ -5,7 +5,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from json import loads
 
 from django.shortcuts import render
-from django.contrib.auth.models import User
+from authentication.models import User
 
 from server.validators import validate_register
 

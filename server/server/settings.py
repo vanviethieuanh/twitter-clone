@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'twitter',
+    'authentication',
     'drf_yasg'
 ]
 
@@ -155,3 +156,5 @@ SIMPLE_JWT = {
 
 STATIC_URL = 'static/'
 STATIC_ROOT = '/vol/static'
+
+AUTH_USER_MODEL = 'authentication.User'

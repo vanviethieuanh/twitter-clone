@@ -20,9 +20,6 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from drf_yasg import openapi
-from drf_yasg import views
-
 from .views import *
 
 urlpatterns = [
@@ -33,6 +30,7 @@ urlpatterns = [
     path('', include('twitter.urls')),
 
     path("register", Register.as_view(), name="register"),
+
     path("used/email", isUsedEmail.as_view(), name="isUsedEmail"),
 
     path('login/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),

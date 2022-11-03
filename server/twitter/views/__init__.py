@@ -5,12 +5,4 @@ from rest_framework import permissions
 from rest_framework import authentication
 from rest_framework import views
 
-
-class BaseAuthenticatedView(views.APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
-
-
-class BaseAuthenticatedOrReadOnlyView(views.APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+from rest_framework.permissions import IsAuthenticated
