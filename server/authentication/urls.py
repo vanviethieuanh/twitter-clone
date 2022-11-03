@@ -1,19 +1,18 @@
 from django.urls import path
-from .views import *
-from rest_framework import routers
+
+from authentication.views import UserInfoView
+from authentication.views import UserView
+from authentication.views import check_used_email
+
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path('user-info', UserInfoView.as_view()),
     path('used-email', check_used_email),
-    path('register', Register.as_view()),
 
-    # path("posts/all", AllPost.as_view(), name="all_posts"),
-    # path("posts/tweet", Tweet.as_view(), name="tweet"),
-    # path("posts/following", FollowingPosts.as_view(), name="following_post"),
+    path('register', UserView.as_view()),
 
-    # path("follow/following", Following.as_view(), name="following"),
-    # path("follow/follow", Follow.as_view(), name="follow"),
-    # path("follow/unfollow", Unfollow.as_view(), name="unfollow"),
-
-    # path('user/info', UserInfo.as_view(), name='user-detail'),
+    path('token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
 ]

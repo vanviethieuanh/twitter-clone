@@ -17,9 +17,6 @@ from django.contrib import admin
 from django.urls import include
 from django.urls import path
 
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.views import TokenRefreshView
-
 from .views import *
 
 urlpatterns = [
@@ -27,15 +24,9 @@ urlpatterns = [
     path('swagger', SCHEMA_VIEW.with_ui(
         'swagger', cache_timeout=0), name='swagger-schema'),
 
-    path('', include('twitter.urls')),
     path('auth/', include('authentication.urls')),
 
-    path("register", Register.as_view(), name="register"),
-
-    path("used/email", isUsedEmail.as_view(), name="isUsedEmail"),
-
-    path('login/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('login/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
+    path('', include('twitter.urls')),
 
     path('admin/', admin.site.urls),
 ]

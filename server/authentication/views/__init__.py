@@ -1,3 +1,3 @@
 from .user import UserInfoView
-from .auth import Register
+from .user import UserView
 from .user import check_used_email

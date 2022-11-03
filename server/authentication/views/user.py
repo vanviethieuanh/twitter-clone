@@ -11,6 +11,18 @@ from rest_framework import views
 from rest_framework.decorators import api_view
 
 
+class UserView(views.APIView):
+    permission_classes = (permissions.AllowAny,)
+    serializer = UserSerializer
+
+    def post(self, request):
+        serializer = self.serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.create()
+
+        return response.Response(UserSerializer(user).data)
+
+
 class UserInfoView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
