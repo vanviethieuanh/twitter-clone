@@ -24,6 +24,9 @@ class PostView(views.APIView):
     serializer_class = PostSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
+    @swagger_auto_schema(
+        operation_summary="Create a new post."
+    )
     def post(self, request, format=None):
         author = request.user
         serializer = self.serializer_class(data=request.data)
@@ -33,6 +36,7 @@ class PostView(views.APIView):
         return response.Response(self.serializer_class(post).data)
 
     @swagger_auto_schema(
+        operation_summary="Delete a post by id.",
         manual_parameters=[
             IdQueryParameter(description='Post id to delete', required=True)
         ]
