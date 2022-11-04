@@ -26,9 +26,9 @@ class UserView(views.APIView):
     def post(self, request):
         serializer = self.serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.create()
+        user = serializer.create()
 
-        return response.Response(serializer.data)
+        return response.Response(self.serializer(user).data)
 
 
 class UserInfoView(views.APIView):
@@ -39,7 +39,7 @@ class UserInfoView(views.APIView):
     )
     def get(self, request):
         user = request.user
-        return response.Response(UserSerializer(user).data)
+        return response.Response(self.serializer(user).data)
 
 
 @swagger_auto_schema(
