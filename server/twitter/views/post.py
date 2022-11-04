@@ -1,10 +1,9 @@
-from rest_framework_simplejwt.authentication import JWTAuthentication
-
 from rest_framework import generics
 from rest_framework import response
 from rest_framework import permissions
 from rest_framework import views
 from rest_framework import pagination
+from rest_framework import exceptions
 
 from twitter.models import Post
 from twitter.models import Follow
@@ -12,6 +11,8 @@ from twitter.models import Follow
 from twitter.serializers import PostSerializer
 
 from drf_yasg.utils import swagger_auto_schema
+
+from common.helpers.doc import IdPathParameter
 
 
 class PostPagination(pagination.PageNumberPagination):
@@ -31,12 +32,26 @@ class PostView(views.APIView):
 
         return response.Response(self.serializer_class(post).data)
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            IdPathParameter(description='Post id to delete', required=True)
+        ]
+    )
     def delete(self, request, format=None):
         author = request.user
 
         post_id = request.query_params.get('id')
+        post = Post.objects.filter(id=post_id).first()
 
-        pass
+        if not post:
+            raise exceptions.NotFound()
+
+        if author is not post.author:
+            raise exceptions.PermissionDenied(
+                detail=f'Post own by {post.author}')
+
+        post.delete()
+        return response.Response(self.serializer_class(post))
 
 
 class AllPostView(generics.ListAPIView):

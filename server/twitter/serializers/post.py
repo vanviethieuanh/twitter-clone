@@ -8,8 +8,8 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta():
         model = Post
-        fields = ('author', 'post', 'post_date')
-        read_only_fields = ('post_date', 'author')
+        fields = ('author', 'post', 'post_date', 'id')
+        read_only_fields = ('post_date', 'author', 'id')
 
     def create(self, author: User):
         post = Post(
