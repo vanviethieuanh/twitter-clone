@@ -5,7 +5,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from rest_framework import permissions
 from rest_framework import response
-from rest_framework import status
+from rest_framework import exceptions
 from rest_framework import views
 
 from rest_framework.decorators import api_view
@@ -53,6 +53,8 @@ class UserInfoView(views.APIView):
 def check_used_email(request):
     email = request.query_params.get('email')
     if not email:
-        return response.Response({'error': 'Email not provided!'}, status=status.HTTP_400_BAD_REQUEST)
+        raise exceptions.NotAcceptable(detail="Email is require.")
 
-    return response.Response({"isTaken": User.objects.filter(username=email['email']).exists()})
+    is_taken = User.objects.filter(email=email).exists()
+
+    return response.Response({"isTaken": is_taken})
