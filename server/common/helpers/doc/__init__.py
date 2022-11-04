@@ -1,1 +1,3 @@
-from .parameter import IdPathParameter
+
+from .parameter import EmailQueryParameter
+from .parameter import IdQueryParameter

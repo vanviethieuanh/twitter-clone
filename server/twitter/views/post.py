@@ -12,7 +12,7 @@ from twitter.serializers import PostSerializer
 
 from drf_yasg.utils import swagger_auto_schema
 
-from common.helpers.doc import IdPathParameter
+from common.helpers.doc import IdQueryParameter
 
 
 class PostPagination(pagination.PageNumberPagination):
@@ -34,7 +34,7 @@ class PostView(views.APIView):
 
     @swagger_auto_schema(
         manual_parameters=[
-            IdPathParameter(description='Post id to delete', required=True)
+            IdQueryParameter(description='Post id to delete', required=True)
         ]
     )
     def delete(self, request, format=None):
