@@ -8,6 +8,8 @@ from rest_framework import routers
 
 urlpatterns = [
     path('posts', PostView.as_view()),
+    path('posts/following', FollowingPostView.as_view()),
+    path('posts/all', AllPostView.as_view()),
 
     # path("posts/all", AllPost.as_view(), name="all_posts"),
     # path("posts/tweet", Tweet.as_view(), name="tweet"),

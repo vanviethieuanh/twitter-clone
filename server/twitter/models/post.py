@@ -3,6 +3,7 @@ from authentication.models import User
 
 
 class Post(models.Model):
+    id = models.BigAutoField(primary_key=True)
 
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='author')

@@ -1,9 +1,10 @@
 from django.db import models
 from authentication.models import User
-import uuid
 
 
 class Follow(models.Model):
+    id = models.BigAutoField(primary_key=True)
+
     following = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='following')
     follower = models.ForeignKey(
