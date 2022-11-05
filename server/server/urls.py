@@ -19,6 +19,7 @@ from django.urls import path, re_path
 
 from .views import *
 
+
 urlpatterns = [
     # Swagger
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
@@ -28,9 +29,12 @@ urlpatterns = [
     re_path(r'^redoc/$', SCHEMA_VIEW.with_ui('redoc',
             cache_timeout=0), name='schema-redoc'),
 
+    # Admin site
+    path('admin/', admin.site.urls),
+
+    # Auth app
     path('auth/', include('authentication.urls')),
 
+    # Twitter
     path('', include('twitter.urls')),
-
-    path('admin/', admin.site.urls),
 ]
