@@ -23,10 +23,14 @@ services:
     networks:
       - twitter_network
 
-  # # Portal
-  # client:
-  #   build: ./client
-
+  # Portal
+  client:
+    build: ./client
+    ports:
+      - '8080:80'
+    networks:
+      - twitter_network
+  
   # API server
   server:
     build: ./server
