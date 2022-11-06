@@ -2,8 +2,6 @@ from django.core.management.base import BaseCommand
 from authentication.models import User
 from twitter.models import Follow
 
-import lorem
-
 
 class Command(BaseCommand):
     help = 'Seed data to database.'

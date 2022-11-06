@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Follow
+from twitter.models import Follow
 
 
 class FollowingSerializer(serializers.ModelSerializer):
