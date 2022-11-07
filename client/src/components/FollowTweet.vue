@@ -9,7 +9,7 @@
         class="mb-4"
       />
     </div>
-    <v-container v-if="!posts.length" class="d-flex mx-auto justify-center">
+    <v-container v-if="!posts.count" class="d-flex mx-auto justify-center">
       <p>Follow more people to get more post!</p>
     </v-container>
   </div>
@@ -39,20 +39,10 @@ export default {
       Api.JWTAuth()
         .get('posts/following')
         .then(res => {
-          console.log(res.data)
-          this.user = res.data.user
-          this.$store.commit('setFollowingPosts', res.data.posts)
-
-          const fullName =
-            res.data.user.first_name + ' ' + res.data.user.last_name
-
-          this.$store.commit('setUserInfo', {
-            fullName: fullName,
-            email: res.data.user.username,
-            id: res.data.user.id
-          })
+          this.$store.commit('setFollowingPosts', res.data.results)
         })
         .catch(err => {
+          console.log(err.response)
           if (err.response.status === 401) {
             this.$router.push('/')
           }

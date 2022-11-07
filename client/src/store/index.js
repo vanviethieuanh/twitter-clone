@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import base64 from 'base-64'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -17,6 +19,14 @@ export default new Vuex.Store({
   mutations: {
     setToken(state, token) {
       state.JWTtoken = token
+      
+      const payload_string = base64.decode(token.split('.')[1])
+      const payload = JSON.parse(payload_string)
+
+      console.log(payload)
+      state.userEmail = payload.email
+      state.userFullName = payload.first_name + payload.last_name
+      state.userId = payload.user_id
     },
     setUserInfo(state, { fullName, email, id }) {
       state.userFullName = fullName

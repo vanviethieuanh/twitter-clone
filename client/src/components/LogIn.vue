@@ -74,7 +74,7 @@ export default {
   methods: {
     logIn() {
       Api.Public()
-        .post('login/token', {
+        .post('auth/token', {
           username: this.email,
           password: this.password
         })
