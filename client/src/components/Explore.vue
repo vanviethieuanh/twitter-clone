@@ -41,18 +41,7 @@ export default {
       Api.JWTAuth()
         .get('posts/all')
         .then(res => {
-          // console.log(res.data)
-          // this.user = res.data.user
           this.$store.commit('setExplorePosts', res.data.results)
-
-          // const fullName =
-          //   res.data.user.first_name + ' ' + res.data.user.last_name
-
-          // this.$store.commit('setUserInfo', {
-          //   fullName: fullName,
-          //   email: res.data.user.username,
-          //   id: res.data.user.id
-          // })
         })
         .catch(err => {
           if (err.response.status === 401) {
