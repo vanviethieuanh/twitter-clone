@@ -20,13 +20,13 @@
     </p>
     <v-container class="d-flex justify-space-between pa-0">
       <p>
-        <b>{{ userInfo.posts }}</b> posts
+        <b>{{ userInfo.post_count }}</b> posts
       </p>
       <p>
-        <b>{{ userInfo.followers }}</b> followers
+        <b>{{ userInfo.follower_count }}</b> followers
       </p>
       <p>
-        <b>{{ userInfo.followings }}</b> following
+        <b>{{ userInfo.following_count }}</b> following
       </p>
     </v-container>
   </v-container>
@@ -43,7 +43,7 @@ export default {
   },
   props: {
     userId: {
-      type: Number,
+      type: String,
       default: -1
     }
   },
@@ -63,8 +63,8 @@ export default {
   methods: {
     getInfo() {
       Api.JWTAuth()
-        .post('user/info', {
-          user_id: this.userId
+        .get('/auth/user-info', {
+          params: { id: this.userId }
         })
         .then(response => {
           this.userInfo = response.data

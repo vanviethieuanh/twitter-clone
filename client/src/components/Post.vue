@@ -49,7 +49,7 @@ export default {
       default: 'Author'
     },
     author_id: {
-      type: Number,
+      type: String,
       default: -1
     },
     post: {
