@@ -13,6 +13,7 @@ from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 
 from common.helpers.doc import EmailQueryParameter
+from common.helpers.doc import IdQueryParameter
 
 
 class UserView(views.APIView):
@@ -32,13 +33,24 @@ class UserView(views.APIView):
 
 
 class UserInfoView(views.APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
+    serializer = UserSerializer
 
     @swagger_auto_schema(
-        operation_summary="Return user infomation associate with the token."
+        operation_summary="Return infomation of a user. If query not secify, return user infomation associate with the token.",
+        manual_parameters=[
+            IdQueryParameter(description='User Id to check.', required=True)
+        ]
     )
     def get(self, request):
-        user = request.user
+        user_id = request.query_params.get('id')
+        if not user_id:
+            raise exceptions.bad_request()
+
+        user = User.objects.get(pk=user_id)
+        if not user:
+            raise exceptions.NotFound()
+
         return response.Response(self.serializer(user).data)
 
 
