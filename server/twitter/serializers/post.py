@@ -8,13 +8,15 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta():
         model = Post
-        fields = ('author', 'post', 'post_date', 'id')
-        read_only_fields = ('post_date', 'author', 'id')
+        read_only_fields = ('post_date', 'author', 'id',
+                            'author_email', 'author_username')
+        fields = ('post',) + read_only_fields
 
     def create(self, author: User):
         post = Post(
             author=author,
             post=self.validated_data['post']
         )
+
         post.save()
         return post

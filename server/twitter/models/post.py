@@ -16,6 +16,14 @@ class Post(models.Model):
 
         ordering = ['-post_date']
 
+    @property
+    def author_email(self):
+        return self.author.email
+
+    @property
+    def author_username(self):
+        return self.author.username
+
     def __str__(self):
         return self.post
 
