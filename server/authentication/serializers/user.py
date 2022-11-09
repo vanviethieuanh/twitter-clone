@@ -6,10 +6,10 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta():
         model = User
+        read_only_fields = ('follower_count', 'following_count', 'post_count')
         fields = ('id',
                   'username', 'password', 'email',
-                  'first_name', 'last_name')
-        read_only_fields = ('follower_count', 'following_count')
+                  'first_name', 'last_name',) + read_only_fields
 
         extra_kwargs = {'password': {'write_only': True}}
 

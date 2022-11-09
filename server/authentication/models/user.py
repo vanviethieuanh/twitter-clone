@@ -16,4 +16,8 @@ class User(AbstractUser):
     def following_count(self):
         return apps.get_model('twitter.Follow').objects.filter(follower=self).count()
 
+    @property
+    def post_count(self):
+        return apps.get_model('twitter.Post').objects.filter(author=self).count()
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
