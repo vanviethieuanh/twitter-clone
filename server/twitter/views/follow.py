@@ -54,7 +54,7 @@ class FollowView(views.APIView):
             raise exceptions.NotFound(detail="User not found.")
 
         follower = request.user
-        follow = Follow.objects.create(
+        follow, _ = Follow.objects.get_or_create(
             follower=follower,
             following=follow_user
         )
