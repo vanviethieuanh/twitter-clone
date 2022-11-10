@@ -1,6 +1,6 @@
 <template>
   <v-container class="container">
-    <v-container class="d-flex  pa-0 mt-10 align-center">
+    <v-container class="d-flex pa-0 mt-10 align-center">
       <p class="font-weight-light text-h5 mb-0 mr-5">
         {{ userInfo.first_name }} {{ userInfo.last_name }}
       </p>
@@ -16,7 +16,7 @@
       >
     </v-container>
     <p class="font-weight-medium text-subtitle-1 pt-0">
-      {{ userInfo.username }}
+      {{ userInfo.email }}
     </p>
     <v-container class="d-flex justify-space-between pa-0">
       <p>
@@ -38,14 +38,14 @@ import Api from '@/services/api.js'
 export default {
   data() {
     return {
-      userInfo: {}
+      userInfo: {},
     }
   },
   props: {
     userId: {
       type: String,
-      default: -1
-    }
+      default: -1,
+    },
   },
   computed: {
     isDisableFollowButton() {
@@ -58,59 +58,77 @@ export default {
       const isFollowing = this.userInfo.is_following
       if (!isThisUser && isFollowing) return 'Unfollow'
       else return 'Follow'
-    }
+    },
   },
   methods: {
     getInfo() {
       Api.JWTAuth()
         .get('/auth/user-info', {
-          params: { id: this.userId }
+          params: { id: this.userId },
         })
-        .then(response => {
-          this.userInfo = response.data
+        .then((response) => {
+          this.userInfo = {...this.userInfo, ...response.data}
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.status === 401) {
             this.$router.push('/')
           }
         })
     },
+    checkFollow() {
+      Api.JWTAuth()
+        .get('/follow', {
+          params: { following_id: this.userId },
+        })
+        .then(() => {
+          this.userInfo.is_following = true
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            this.$router.push('/')
+          } else if (error.response.status === 404) {
+            this.userInfo.is_following = false
+          }
+        })
+    },
+
     follow() {
       const isFollowing = this.userInfo.is_following
       if (!isFollowing) {
         Api.JWTAuth()
-          .post('follow/follow', {
-            follow_id: this.userId
+          .post('follow', null, {
+            params: { id: this.userId },
           })
           .then(() => {
             this.userInfo.is_following = true
-            this.userInfo.followers++
+            this.userInfo.follower_count++
           })
-          .catch(error => {
+          .catch((error) => {
             if (error.response.status === 401) {
               this.$router.push('/')
             }
           })
       } else {
         Api.JWTAuth()
-          .post('follow/unfollow', {
-            follow_id: this.userId
+          .delete('follow', {
+            params: { id: this.userId },
           })
           .then(() => {
             this.userInfo.is_following = false
-            this.userInfo.followers--
+            this.userInfo.follower_count--
           })
-          .catch(error => {
+          .catch((error) => {
             if (error.response.status === 401) {
               this.$router.push('/')
             }
           })
       }
-    }
+    },
   },
   mounted() {
     this.getInfo()
-  }
+    this.checkFollow()
+  },
 }
 </script>
 <style lang="scss" scoped>
