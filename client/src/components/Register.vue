@@ -24,6 +24,12 @@
           </v-row>
 
           <v-text-field
+            name="username"
+            label="Username"
+            v-model.trim="username"
+            required
+          ></v-text-field>
+          <v-text-field
             v-model.trim="email"
             label="E-mail"
             prepend-icon="mdi-email"
@@ -70,7 +76,7 @@
 </template>
 
 <script>
-import Api from '@/services/api.js'
+import AuthService from '@/services/auth.js'
 
 export default {
   name: 'Register',
@@ -85,6 +91,7 @@ export default {
 
       first_name: '',
       last_name: '',
+      username: '',
       email: '',
       password: '',
       UsedEmail: null,
@@ -114,10 +121,7 @@ export default {
       this.$refs.form.validate()
     },
     async checkUsedEmail() {
-      Api.Public()
-        .post('used/email', {
-          email: this.email
-        })
+      AuthService.CheckUsedEmail(this.email)
         .then(response => {
           if (response.data.isTaken == 0) {
             this.UsedEmail = null
@@ -132,17 +136,15 @@ export default {
       const used = await this.checkUsedEmail()
       if (used) return
 
-      Api.Public()
-        .post('register', {
-          last_name: this.last_name,
-          first_name: this.first_name,
-          email: this.email,
-          password: this.password
-        })
-        .then(response => {
-          this.$store.dispatch('setToken', response.data.access).then(() => {
-            this.$router.push('home')
-          })
+      AuthService.Register({
+      last_name: this.last_name,
+      first_name: this.first_name,
+      email: this.email,
+      password: this.password,
+      username: this.username
+    })
+        .then(() => {
+         this.$emit('log-in', true)
         })
     }
   }

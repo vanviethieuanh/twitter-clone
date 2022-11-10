@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import Api from '@/services/api.js'
+import AuthService from '@/services/auth.js'
 
 export default {
   name: 'LogIn',
@@ -73,11 +73,7 @@ export default {
   },
   methods: {
     logIn() {
-      Api.Public()
-        .post('auth/token', {
-          username: this.email,
-          password: this.password
-        })
+      AuthService.Login(this.email, this.password)
         .then(response => {
           this.$store.dispatch('setToken', response.data.access).then(() => {
             this.$router.push('home')
