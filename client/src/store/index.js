@@ -19,7 +19,7 @@ export default new Vuex.Store({
   mutations: {
     setToken(state, token) {
       state.JWTtoken = token
-      
+
       const payload_string = base64.decode(token.split('.')[1])
       const payload = JSON.parse(payload_string)
 

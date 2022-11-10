@@ -38,14 +38,14 @@ import Api from '@/services/api.js'
 export default {
   data() {
     return {
-      userInfo: {},
+      userInfo: {}
     }
   },
   props: {
     userId: {
       type: String,
-      default: -1,
-    },
+      default: -1
+    }
   },
   computed: {
     isDisableFollowButton() {
@@ -58,18 +58,18 @@ export default {
       const isFollowing = this.userInfo.is_following
       if (!isThisUser && isFollowing) return 'Unfollow'
       else return 'Follow'
-    },
+    }
   },
   methods: {
     getInfo() {
       Api.JWTAuth()
         .get('/auth/user-info', {
-          params: { id: this.userId },
+          params: { id: this.userId }
         })
-        .then((response) => {
-          this.userInfo = {...this.userInfo, ...response.data}
+        .then(response => {
+          this.userInfo = { ...this.userInfo, ...response.data }
         })
-        .catch((error) => {
+        .catch(error => {
           if (error.response.status === 401) {
             this.$router.push('/')
           }
@@ -78,12 +78,12 @@ export default {
     checkFollow() {
       Api.JWTAuth()
         .get('/follow', {
-          params: { following_id: this.userId },
+          params: { following_id: this.userId }
         })
         .then(() => {
           this.userInfo.is_following = true
         })
-        .catch((error) => {
+        .catch(error => {
           if (error.response.status === 401) {
             this.$router.push('/')
           } else if (error.response.status === 404) {
@@ -97,13 +97,13 @@ export default {
       if (!isFollowing) {
         Api.JWTAuth()
           .post('follow', null, {
-            params: { id: this.userId },
+            params: { id: this.userId }
           })
           .then(() => {
             this.userInfo.is_following = true
             this.userInfo.follower_count++
           })
-          .catch((error) => {
+          .catch(error => {
             if (error.response.status === 401) {
               this.$router.push('/')
             }
@@ -111,24 +111,24 @@ export default {
       } else {
         Api.JWTAuth()
           .delete('follow', {
-            params: { id: this.userId },
+            params: { id: this.userId }
           })
           .then(() => {
             this.userInfo.is_following = false
             this.userInfo.follower_count--
           })
-          .catch((error) => {
+          .catch(error => {
             if (error.response.status === 401) {
               this.$router.push('/')
             }
           })
       }
-    },
+    }
   },
   mounted() {
     this.getInfo()
     this.checkFollow()
-  },
+  }
 }
 </script>
 <style lang="scss" scoped>
