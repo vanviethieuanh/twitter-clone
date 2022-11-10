@@ -2,7 +2,7 @@
   <div>
     <div v-for="post in posts" :key="post.id">
       <Post
-        v-bind:author="post.author_username"
+        v-bind:author="post.author_email"
         v-bind:post="post.post"
         v-bind:author_id="post.author"
         v-bind:time="post.post_date"
