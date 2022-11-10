@@ -33,7 +33,8 @@
 </template>
 
 <script>
-import Api from '@/services/api.js'
+import UserService from '@/services/user.js'
+import FollowService from '@/services/follow.js'
 
 export default {
   data() {
@@ -62,10 +63,7 @@ export default {
   },
   methods: {
     getInfo() {
-      Api.JWTAuth()
-        .get('/auth/user-info', {
-          params: { id: this.userId }
-        })
+      UserService.UserInfo(this.userId)
         .then(response => {
           this.userInfo = { ...this.userInfo, ...response.data }
         })
@@ -76,10 +74,7 @@ export default {
         })
     },
     checkFollow() {
-      Api.JWTAuth()
-        .get('/follow', {
-          params: { following_id: this.userId }
-        })
+      FollowService.CheckFollowing(this.userId)
         .then(() => {
           this.userInfo.is_following = true
         })
@@ -95,10 +90,7 @@ export default {
     follow() {
       const isFollowing = this.userInfo.is_following
       if (!isFollowing) {
-        Api.JWTAuth()
-          .post('follow', null, {
-            params: { id: this.userId }
-          })
+        FollowService.Follow(this.userId)
           .then(() => {
             this.userInfo.is_following = true
             this.userInfo.follower_count++
@@ -109,10 +101,7 @@ export default {
             }
           })
       } else {
-        Api.JWTAuth()
-          .delete('follow', {
-            params: { id: this.userId }
-          })
+        FollowService.Unfollow(this.userId)
           .then(() => {
             this.userInfo.is_following = false
             this.userInfo.follower_count--

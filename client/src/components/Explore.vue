@@ -17,7 +17,7 @@
 
 <script>
 import Post from '@/components/Post'
-import Api from '@/services/api.js'
+import PostService from '@/services/post.js'
 
 export default {
   name: 'Explore',
@@ -38,8 +38,7 @@ export default {
     getTime() {},
 
     getPosts() {
-      Api.JWTAuth()
-        .get('posts/all')
+      PostService.AllPost()
         .then(res => {
           this.$store.commit('setExplorePosts', res.data.results)
         })

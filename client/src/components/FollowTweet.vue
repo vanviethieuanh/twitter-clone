@@ -17,7 +17,7 @@
 
 <script>
 import Post from '@/components/Post'
-import Api from '@/services/api.js'
+import PostService from '@/services/post.js'
 
 export default {
   name: 'FollowingTweet',
@@ -36,8 +36,7 @@ export default {
   },
   methods: {
     getPosts() {
-      Api.JWTAuth()
-        .get('posts/following')
+      PostService.FollowingPost()
         .then(res => {
           this.$store.commit('setFollowingPosts', res.data.results)
         })

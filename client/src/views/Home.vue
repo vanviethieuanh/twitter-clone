@@ -129,7 +129,7 @@
 import Explore from '@/components/Explore.vue'
 import FollowTweet from '@/components/FollowTweet.vue'
 import User from '@/components/User.vue'
-import Api from '@/services/api.js'
+import PostService from '@/services/post.js'
 
 export default {
   data() {
@@ -147,11 +147,7 @@ export default {
   },
   methods: {
     send() {
-      console.log(this.post)
-      Api.JWTAuth()
-        .post('posts/tweet', {
-          post: this.post
-        })
+      PostService.Post(this.post)
         .then(res => {
           this.post = ''
           console.log(res.data)

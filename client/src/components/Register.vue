@@ -77,6 +77,7 @@
 
 <script>
 import AuthService from '@/services/auth.js'
+import UserService from '@/services/user.js'
 
 export default {
   name: 'Register',
@@ -121,31 +122,29 @@ export default {
       this.$refs.form.validate()
     },
     async checkUsedEmail() {
-      AuthService.CheckUsedEmail(this.email)
-        .then(response => {
-          if (response.data.isTaken == 0) {
-            this.UsedEmail = null
-            return false
-          } else {
-            this.UsedEmail = 'This email have been taken!'
-            return true
-          }
-        })
+      UserService.CheckUsedEmail(this.email).then(response => {
+        if (response.data.isTaken == 0) {
+          this.UsedEmail = null
+          return false
+        } else {
+          this.UsedEmail = 'This email have been taken!'
+          return true
+        }
+      })
     },
     async Register() {
       const used = await this.checkUsedEmail()
       if (used) return
 
       AuthService.Register({
-      last_name: this.last_name,
-      first_name: this.first_name,
-      email: this.email,
-      password: this.password,
-      username: this.username
-    })
-        .then(() => {
-         this.$emit('log-in', true)
-        })
+        last_name: this.last_name,
+        first_name: this.first_name,
+        email: this.email,
+        password: this.password,
+        username: this.username
+      }).then(() => {
+        this.$emit('log-in', true)
+      })
     }
   }
 }
