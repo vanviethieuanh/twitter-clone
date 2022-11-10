@@ -45,7 +45,7 @@ class PostView(views.APIView):
         author = request.user
 
         post_id = request.query_params.get('id')
-        post = Post.objects.filter(id=post_id).first()
+        post = Post.objects.get(pk=post_id)
 
         if not post:
             raise exceptions.NotFound()

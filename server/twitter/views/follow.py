@@ -23,16 +23,18 @@ class FollowView(views.APIView):
     @swagger_auto_schema(
         operation_summary="Check if user is follow another user or not.",
         manual_parameters=[
-            IdQueryParameter(required=True, description="User id to check.")
+            IdQueryParameter(name='following_id', required=True,
+                             description="User id to check.")
         ]
     )
     def get(self, request):
-        follow_user_id = request.query_params.get('id')
+        following_id = request.query_params.get('following_id')
         follower = request.user
 
-        follow = Follow.objects.filter(
-            follower=follower, following=follow_user_id).first()
-        if not follow:
+        try:
+            follow = Follow.objects.get(
+                follower=follower, following__pk=following_id)
+        except:
             raise exceptions.NotFound()
 
         return response.Response(self.serializer_class(follow).data)
@@ -46,12 +48,12 @@ class FollowView(views.APIView):
     def post(self, request):
         follow_user_id = request.query_params.get('id')
 
-        follow_user = User.objects.filter(id=follow_user_id).first()
+        try:
+            follow_user = User.objects.get(pk=follow_user_id)
+        except:
+            raise exceptions.NotFound(detail="User not found.")
+
         follower = request.user
-
-        if not follow_user:
-            raise exceptions.NotFound()
-
         follow = Follow.objects.create(
             follower=follower,
             following=follow_user
@@ -69,9 +71,10 @@ class FollowView(views.APIView):
         follow_user_id = request.query_params.get('id')
         follower = request.user
 
-        follow = Follow.objects.filter(
-            follower=follower, following=follow_user_id).first()
-        if not follow:
+        try:
+            follow = Follow.objects.get(
+                follower=follower, following__pk=follow_user_id)
+        except:
             raise exceptions.NotFound()
 
         follow.delete()

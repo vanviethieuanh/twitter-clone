@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta():
         model = User
         read_only_fields = ('follower_count', 'following_count', 'post_count')

@@ -44,11 +44,9 @@ class UserInfoView(views.APIView):
     )
     def get(self, request):
         user_id = request.query_params.get('id')
-        if not user_id:
-            raise exceptions.bad_request()
-
-        user = User.objects.get(pk=user_id)
-        if not user:
+        try:
+            user = User.objects.get(pk=user_id)
+        except:
             raise exceptions.NotFound()
 
         return response.Response(self.serializer(user).data)
@@ -64,9 +62,5 @@ class UserInfoView(views.APIView):
 @api_view(['GET'])
 def check_used_email(request):
     email = request.query_params.get('email')
-    if not email:
-        raise exceptions.NotAcceptable(detail="Email is require.")
-
     is_taken = User.objects.filter(email=email).exists()
-
     return response.Response({"isTaken": is_taken})
