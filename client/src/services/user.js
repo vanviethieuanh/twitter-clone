@@ -1,14 +1,13 @@
-import Api from '@/services/api.js'
+import axios from './api'
 
-export default {
-  UserInfo(userId) {
-    return Api.JWTAuth().get('/auth/user-info', {
-      params: { id: userId }
-    })
-  },
-  CheckUsedEmail(email) {
-    return Api.Public().post('used/email', {
-      email: email
-    })
-  }
+export const UserInfo = async function (userId) {
+  return await axios.get('/auth/user-info', {
+    params: { id: userId }
+  })
+}
+
+export const CheckUsedEmail = async function (email) {
+  return await axios.post('used/email', {
+    email: email
+  })
 }

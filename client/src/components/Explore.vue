@@ -17,41 +17,41 @@
 
 <script>
 import Post from '@/components/Post'
-import PostService from '@/services/post.js'
+import { AllPost } from '@/services/post.js'
 
 export default {
   name: 'Explore',
   components: {
-    Post
+    Post,
   },
   data() {
     return {
-      user: {}
+      user: {},
     }
   },
   computed: {
     posts() {
       return this.$store.getters.getExplorePosts
-    }
+    },
   },
   methods: {
     getTime() {},
 
     getPosts() {
-      PostService.AllPost()
-        .then(res => {
+      AllPost()
+        .then((res) => {
           this.$store.commit('setExplorePosts', res.data.results)
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response.status === 401) {
             this.$router.push('/')
           }
         })
-    }
+    },
   },
   mounted() {
     this.getPosts()
-  }
+  },
 }
 </script>
 

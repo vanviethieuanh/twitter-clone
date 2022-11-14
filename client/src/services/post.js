@@ -1,17 +1,15 @@
-import Api from '@/services/api.js'
+import axios from './api'
 
-export default {
-  AllPost() {
-    return Api.JWTAuth().get('posts/all')
-  },
+export const AllPost = async function () {
+  return await axios.get('posts/all')
+}
 
-  FollowingPost() {
-    return Api.JWTAuth().get('posts/following')
-  },
+export const FollowingPost = async function () {
+  return await axios.get('posts/following')
+}
 
-  Post(post) {
-    return Api.JWTAuth().post('posts', {
-      post: post
-    })
-  }
+export const Post = async function (post) {
+  return await axios.post('posts', {
+    post: post
+  })
 }

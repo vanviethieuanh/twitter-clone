@@ -17,40 +17,40 @@
 
 <script>
 import Post from '@/components/Post'
-import PostService from '@/services/post.js'
+import { FollowingPost } from '@/services/post.js'
 
 export default {
   name: 'FollowingTweet',
   components: {
-    Post
+    Post,
   },
   data() {
     return {
-      user: {}
+      user: {},
     }
   },
   computed: {
     posts() {
       return this.$store.getters.getFollowingPosts
-    }
+    },
   },
   methods: {
     getPosts() {
-      PostService.FollowingPost()
-        .then(res => {
+      FollowingPost()
+        .then((res) => {
           this.$store.commit('setFollowingPosts', res.data.results)
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err.response)
           if (err.response.status === 401) {
             this.$router.push('/')
           }
         })
-    }
+    },
   },
   mounted() {
     this.getPosts()
-  }
+  },
 }
 </script>
 

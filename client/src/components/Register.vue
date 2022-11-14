@@ -65,7 +65,7 @@
         <v-btn
           color="blue white--text"
           class="ml-2"
-          v-on:click="Register()"
+          v-on:click="RegisterClick()"
           depressed
           :disabled="!valid"
           >Sign Up</v-btn
@@ -76,8 +76,8 @@
 </template>
 
 <script>
-import AuthService from '@/services/auth.js'
-import UserService from '@/services/user.js'
+import {Register} from '@/services/auth.js'
+import {CheckUsedEmail} from '@/services/user.js'
 
 export default {
   name: 'Register',
@@ -122,7 +122,7 @@ export default {
       this.$refs.form.validate()
     },
     async checkUsedEmail() {
-      UserService.CheckUsedEmail(this.email).then(response => {
+      CheckUsedEmail(this.email).then(response => {
         if (response.data.isTaken == 0) {
           this.UsedEmail = null
           return false
@@ -132,19 +132,19 @@ export default {
         }
       })
     },
-    async Register() {
+    async RegisterClick() {
       const used = await this.checkUsedEmail()
       if (used) return
 
-      AuthService.Register({
+      await Register({
         last_name: this.last_name,
         first_name: this.first_name,
         email: this.email,
         password: this.password,
         username: this.username
-      }).then(() => {
-        this.$emit('log-in', true)
       })
+      
+      this.$emit('log-in', true)
     }
   }
 }

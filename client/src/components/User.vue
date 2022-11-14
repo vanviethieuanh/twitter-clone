@@ -33,20 +33,20 @@
 </template>
 
 <script>
-import UserService from '@/services/user.js'
-import FollowService from '@/services/follow.js'
+import { UserInfo } from '@/services/user.js'
+import { Follow, Unfollow, CheckFollowing } from '@/services/follow.js'
 
 export default {
   data() {
     return {
-      userInfo: {}
+      userInfo: {},
     }
   },
   props: {
     userId: {
       type: String,
-      default: -1
-    }
+      default: -1,
+    },
   },
   computed: {
     isDisableFollowButton() {
@@ -59,26 +59,26 @@ export default {
       const isFollowing = this.userInfo.is_following
       if (!isThisUser && isFollowing) return 'Unfollow'
       else return 'Follow'
-    }
+    },
   },
   methods: {
     getInfo() {
-      UserService.UserInfo(this.userId)
-        .then(response => {
+      UserInfo(this.userId)
+        .then((response) => {
           this.userInfo = { ...this.userInfo, ...response.data }
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.status === 401) {
             this.$router.push('/')
           }
         })
     },
     checkFollow() {
-      FollowService.CheckFollowing(this.userId)
+      CheckFollowing(this.userId)
         .then(() => {
           this.userInfo.is_following = true
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.status === 401) {
             this.$router.push('/')
           } else if (error.response.status === 404) {
@@ -90,34 +90,34 @@ export default {
     follow() {
       const isFollowing = this.userInfo.is_following
       if (!isFollowing) {
-        FollowService.Follow(this.userId)
+        Follow(this.userId)
           .then(() => {
             this.userInfo.is_following = true
             this.userInfo.follower_count++
           })
-          .catch(error => {
+          .catch((error) => {
             if (error.response.status === 401) {
               this.$router.push('/')
             }
           })
       } else {
-        FollowService.Unfollow(this.userId)
+        Unfollow(this.userId)
           .then(() => {
             this.userInfo.is_following = false
             this.userInfo.follower_count--
           })
-          .catch(error => {
+          .catch((error) => {
             if (error.response.status === 401) {
               this.$router.push('/')
             }
           })
       }
-    }
+    },
   },
   mounted() {
     this.getInfo()
     this.checkFollow()
-  }
+  },
 }
 </script>
 <style lang="scss" scoped>

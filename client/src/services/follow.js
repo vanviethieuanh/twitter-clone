@@ -1,19 +1,20 @@
-import Api from '@/services/api.js'
+import axios from './api'
 
-export default {
-  CheckFollowing(userId) {
-    return Api.JWTAuth().get('/follow', {
-      params: { following_id: userId }
-    })
-  },
-  Follow(userId) {
-    return Api.JWTAuth().post('follow', null, {
-      params: { id: userId }
-    })
-  },
-  Unfollow(userId) {
-    return Api.JWTAuth().delete('follow', {
-      params: { id: userId }
-    })
-  }
+
+export const CheckFollowing = async function (userId) {
+  return await axios.get('follow', {
+    params: { following_id: userId }
+  })
+}
+
+export const Follow = async function (userId) {
+  return await axios.post('follow', null, {
+    params: { id: userId }
+  })
+}
+
+export const Unfollow = async function (userId) {
+  return await axios.delete('follow', {
+    params: { id: userId }
+  })
 }
