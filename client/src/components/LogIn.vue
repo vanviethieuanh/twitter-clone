@@ -48,6 +48,7 @@
 <script>
 import { Login } from '@/services/auth.js'
 
+
 export default {
   name: 'LogIn',
 
@@ -75,6 +76,8 @@ export default {
     logIn() {
       Login(this.email, this.password)
         .then((response) => {
+          sessionStorage.setItem("refresh_token", response.data.refresh)
+
           this.$store.dispatch('setToken', response.data).then(() => {
             this.$router.push('home')
           })

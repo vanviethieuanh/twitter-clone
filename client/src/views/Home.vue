@@ -128,7 +128,7 @@ import { Post } from '@/services/post.js'
 export default {
   data() {
     return {
-      isOn: 'Explore',
+      isOn: 'Home',
       viewUserId: -1,
       post: null,
       drawer: false,

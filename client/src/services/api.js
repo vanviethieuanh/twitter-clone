@@ -25,11 +25,14 @@ axios.interceptors.response.use(res => res,
       const { status, data } = await axios.post(
         'auth/token/refresh',
         {
-          "refresh": store.getters.getRefreshToken
+          "refresh": sessionStorage.getItem('refresh_token')
         }
       )
       if (status === 200) {
         axios.defaults.headers['Authorization'] = `Bearer ${data.access}`
+        store.dispatch('setToken', data).then(() => {
+          this.$router.push('home')
+        })
         return axios(error.config)
       }
       axios.refreshingToken = false
