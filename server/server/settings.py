@@ -154,7 +154,8 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     # Set access token lifetime to 1 minute if in production
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60 if DEBUG else 1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
 }
 
 STATIC_URL = 'static/'
