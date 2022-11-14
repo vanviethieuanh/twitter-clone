@@ -27,7 +27,7 @@ class PostView(views.APIView):
     @swagger_auto_schema(
         operation_summary="Create a new post."
     )
-    def post(self, request, format=None):
+    def post(self, request):
         author = request.user
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -41,7 +41,7 @@ class PostView(views.APIView):
             IdQueryParameter(description='Post id to delete', required=True)
         ]
     )
-    def delete(self, request, format=None):
+    def delete(self, request):
         author = request.user
 
         post_id = request.query_params.get('id')

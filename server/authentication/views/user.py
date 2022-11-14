@@ -1,17 +1,13 @@
-from authentication.serializers import UserSerializer
-from authentication.models import User
-
-from rest_framework_simplejwt.authentication import JWTAuthentication
-
-from rest_framework import permissions
-from rest_framework import response
-from rest_framework import exceptions
-from rest_framework import views
-
-from rest_framework.decorators import api_view
-
 from drf_yasg.utils import swagger_auto_schema
 
+from rest_framework import exceptions
+from rest_framework import permissions
+from rest_framework import response
+from rest_framework import views
+from rest_framework.decorators import api_view
+
+from authentication.models import User
+from authentication.serializers import UserSerializer
 from common.helpers.doc import EmailQueryParameter
 from common.helpers.doc import IdQueryParameter
 
@@ -37,7 +33,8 @@ class UserInfoView(views.APIView):
     serializer = UserSerializer
 
     @swagger_auto_schema(
-        operation_summary="Return infomation of a user. If query not secify, return user infomation associate with the token.",
+        operation_summary="Return information of a user. If query not specify, return user information associate with "
+                          "the token.",
         manual_parameters=[
             IdQueryParameter(description='User Id to check.', required=True)
         ]
@@ -46,7 +43,7 @@ class UserInfoView(views.APIView):
         user_id = request.query_params.get('id')
         try:
             user = User.objects.get(pk=user_id)
-        except:
+        except User.DoesNotExist:
             raise exceptions.NotFound()
 
         return response.Response(self.serializer(user).data)

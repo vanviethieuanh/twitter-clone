@@ -1,4 +1,5 @@
 from django.db import models
+
 from authentication.models import User
 
 
@@ -11,8 +12,8 @@ class Post(models.Model):
     post_date = models.DateTimeField("Post date", auto_now_add=True)
 
     class Meta:
-        verbose_name = ("post")
-        verbose_name_plural = ("posts")
+        verbose_name = "post"
+        verbose_name_plural = "posts"
 
         ordering = ['-post_date']
 
@@ -26,6 +27,3 @@ class Post(models.Model):
 
     def __str__(self):
         return self.post
-
-    def get_absolute_url(self):
-        return reverse("post_detail", kwargs={"pk": self.pk})
