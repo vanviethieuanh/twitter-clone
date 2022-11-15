@@ -1,11 +1,20 @@
 import axios from './api'
 
-export const AllPost = async function () {
-  return await axios.get('posts/all')
+export const AllPost = async function (page = 1) {
+  return await axios.get('posts/all',
+    {
+      params: {
+        page: page
+      }
+    })
 }
 
-export const FollowingPost = async function () {
-  return await axios.get('posts/following')
+export const FollowingPost = async function (page = 1) {
+  return await axios.get('posts/following', {
+    params: {
+      page: page
+    }
+  })
 }
 
 export const Post = async function (post) {

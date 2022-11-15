@@ -27,30 +27,47 @@ export default {
   data() {
     return {
       user: {},
+      posts: [],
+      page: 1,
     }
   },
-  computed: {
-    posts() {
-      return this.$store.getters.getExplorePosts
-    },
-  },
+
   methods: {
     getTime() {},
 
     getPosts() {
-      AllPost()
+      AllPost(this.page ?? 1)
         .then((res) => {
-          this.$store.commit('setExplorePosts', res.data.results)
+          this.posts = [...this.posts, ...res.data.results]
+          this.page++
         })
         .catch((err) => {
           if (err.response.status === 401) {
             this.$router.push('/')
           }
+          if (err.response.status === 404) {
+            // Stop listen event when end
+            window.removeEventListener('scroll', this.onScroll)
+          }
         })
+    },
+    onScroll(e) {
+      // this.windowTop = window.top.scrollY
+      const listElement = e.target.documentElement
+      if (
+        listElement.scrollTop + listElement.clientHeight >=
+        listElement.scrollHeight
+      ) {
+        this.getPosts()
+      }
     },
   },
   mounted() {
     this.getPosts()
+    window.addEventListener('scroll', this.onScroll)
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.onScroll)
   },
 }
 </script>

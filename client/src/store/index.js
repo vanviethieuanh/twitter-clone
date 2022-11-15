@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import base64 from 'base-64'
+import axios from '@/services/api.js'
 
 Vue.use(Vuex)
 
@@ -22,6 +23,8 @@ export default new Vuex.Store({
     setToken(state, {refresh: refresh_token, access: access_token}) {
       state.access_token = access_token
       state.refresh_token = refresh_token
+
+      axios.defaults.headers['Authorization'] = `Bearer ${access_token}`
 
       const payload_string = base64.decode(access_token.split('.')[1])
       const payload = JSON.parse(payload_string)
@@ -49,8 +52,8 @@ export default new Vuex.Store({
     setExplorePosts(state, posts) {
       state.explorePosts = posts
     },
-    setFollowingPosts(state, posts) {
-      state.followingPosts = posts
+    addFollowingPosts(state, posts) {
+      state.followingPosts = [...state.followingPosts, ...posts]
     }
   },
   actions: {
