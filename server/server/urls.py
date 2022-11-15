@@ -14,23 +14,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from django.urls import include
+from django.urls import path, re_path
 
-from server.views import *
+from .views import *
+
 
 urlpatterns = [
-    path('', index),
-    path('', include('twitter.urls')),
+    # Swagger
+    re_path(r'^swagger(?P<format>\.json|\.yaml)$',
+            SCHEMA_VIEW.without_ui(cache_timeout=0), name='schema-json'),
+    re_path(r'^swagger/$', SCHEMA_VIEW.with_ui('swagger',
+            cache_timeout=0), name='schema-swagger-ui'),
+    re_path(r'^redoc/$', SCHEMA_VIEW.with_ui('redoc',
+            cache_timeout=0), name='schema-redoc'),
+    path(r'', SCHEMA_VIEW.with_ui('swagger',
+                                  cache_timeout=0), name='schema-swagger-ui'),
 
-    path("register", Register.as_view(), name="register"),
-    path("used/email", isUsedEmail.as_view(), name="isUsedEmail"),
-
-    path('login/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('login/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
-
+    # Admin site
     path('admin/', admin.site.urls),
+
+    # Auth app
+    path('auth/', include('authentication.urls')),
+
+    # Twitter
+    path('', include('twitter.urls')),
 ]

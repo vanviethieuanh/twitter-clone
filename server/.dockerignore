@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Docker
+.dockerignore
+dockerfile
+
+# SQLite
+*.sqlite*
+
+# Git
+.gitignore

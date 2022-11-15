@@ -2,14 +2,14 @@
   <div>
     <div v-for="post in posts" :key="post.id">
       <Post
-        v-bind:author="post.author"
+        v-bind:author="post.author_email"
         v-bind:post="post.post"
-        v-bind:author_id="post.author_id"
+        v-bind:author_id="post.author"
         v-bind:time="post.post_date"
         class="mb-4"
       />
     </div>
-    <v-container v-if="!posts.length" class="d-flex mx-auto justify-center">
+    <v-container v-if="!posts.count" class="d-flex mx-auto justify-center">
       <p>Follow more people to get more post!</p>
     </v-container>
   </div>
@@ -17,51 +17,56 @@
 
 <script>
 import Post from '@/components/Post'
-import Api from '@/services/api.js'
+import { FollowingPost } from '@/services/post.js'
 
 export default {
   name: 'FollowingTweet',
   components: {
-    Post
+    Post,
   },
   data() {
     return {
-      user: {}
-    }
-  },
-  computed: {
-    posts() {
-      return this.$store.getters.getFollowingPosts
+      user: {},
+      posts: [],
+      page: 1,
     }
   },
   methods: {
     getPosts() {
-      Api.JWTAuth()
-        .get('posts/following')
-        .then(res => {
-          console.log(res.data)
-          this.user = res.data.user
-          this.$store.commit('setFollowingPosts', res.data.posts)
-
-          const fullName =
-            res.data.user.first_name + ' ' + res.data.user.last_name
-
-          this.$store.commit('setUserInfo', {
-            fullName: fullName,
-            email: res.data.user.username,
-            id: res.data.user.id
-          })
+      FollowingPost(this.page ?? 1)
+        .then((res) => {
+          this.posts = [...this.posts, ...res.data.results]
+          this.page++
         })
-        .catch(err => {
+        .catch((err) => {
+          console.log(err.response)
           if (err.response.status === 401) {
             this.$router.push('/')
           }
+          if (err.response.status === 404) {
+            // Stop listen event when end
+            window.removeEventListener('scroll', this.onScroll)
+          }
         })
-    }
+    },
+    onScroll(e) {
+      // this.windowTop = window.top.scrollY
+      const listElement = e.target.documentElement
+      if (
+        listElement.scrollTop + listElement.clientHeight >=
+        listElement.scrollHeight
+      ) {
+        this.getPosts()
+      }
+    },
   },
   mounted() {
     this.getPosts()
-  }
+    window.addEventListener('scroll', this.onScroll)
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.onScroll)
+  },
 }
 </script>
 

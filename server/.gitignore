@@ -1,0 +1,17 @@
+*sqlite*
+
+# system files
+.DS_Store
+Thumbs.db
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# local env files
+.env.local
+.env.*.local
+env
+
+.idea

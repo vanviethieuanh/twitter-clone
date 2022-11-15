@@ -1,0 +1,11 @@
+Django == 4.1.*
+djangorestframework == 3.*
+markdown == 3.*
+django-filter == 22.*
+djangorestframework-simplejwt == 5.2.*
+django-cors-headers == 3.*
+argon2
+psycopg2-binary == 2.*
+django[argon2]
+drf_yasg
+names

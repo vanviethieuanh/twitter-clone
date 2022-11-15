@@ -35,27 +35,21 @@
         <v-list-item-group active-class="deep-purple--text text--accent-4">
           <v-list-item @click="show_explore">
             <v-list-item-icon>
-              <span class="material-icons">
-                whatshot
-              </span>
+              <span class="material-icons"> whatshot </span>
             </v-list-item-icon>
             <v-list-item-title>Explore</v-list-item-title>
           </v-list-item>
 
           <v-list-item @click="show_home">
             <v-list-item-icon>
-              <span class="material-icons">
-                home
-              </span>
+              <span class="material-icons"> home </span>
             </v-list-item-icon>
             <v-list-item-title>Home</v-list-item-title>
           </v-list-item>
 
           <v-list-item @click="show_current_user">
             <v-list-item-icon>
-              <span class="material-icons">
-                face
-              </span>
+              <span class="material-icons"> face </span>
             </v-list-item-icon>
             <v-list-item-title>{{
               this.$store.getters.getUserEmail
@@ -68,7 +62,7 @@
       <v-container class="mx-auto"
         ><v-row justify="center" dense>
           <v-col cols="column">
-            <v-form style="max-width:600px; margin:auto">
+            <v-form style="max-width: 600px; margin: auto">
               <v-textarea
                 class="mb-5"
                 maxlength="280"
@@ -129,35 +123,31 @@
 import Explore from '@/components/Explore.vue'
 import FollowTweet from '@/components/FollowTweet.vue'
 import User from '@/components/User.vue'
-import Api from '@/services/api.js'
+import { Post } from '@/services/post.js'
 
 export default {
   data() {
     return {
-      isOn: 'Explore',
+      isOn: 'Home',
       viewUserId: -1,
       post: null,
-      drawer: false
+      drawer: false,
     }
   },
   components: {
     Explore,
     FollowTweet,
-    User
+    User,
   },
   methods: {
     send() {
-      console.log(this.post)
-      Api.JWTAuth()
-        .post('posts/tweet', {
-          post: this.post
-        })
-        .then(res => {
+      Post(this.post)
+        .then((res) => {
           this.post = ''
           console.log(res.data)
           this.$store.commit('addPost', res.data)
         })
-        .catch(error => {
+        .catch((error) => {
           if (error.response.status === 401) {
             this.$router.push('/')
           }
@@ -180,7 +170,7 @@ export default {
     logOut() {
       this.$store.commit('logOut')
       this.$router.push('/')
-    }
+    },
   },
   computed: {
     column() {
@@ -197,8 +187,8 @@ export default {
           return 8
       }
       return 12
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -1,22 +1,51 @@
 version: '3.7'
 
 networks:
-  general_network:
-    name: general_network
+  twitter_network:
+    name: twitter_network
+
+volumes:
+  postgres:
+  static:  
 
 services:
-  # # Portal
-  # client:
-  #   build: ./client
+  # Database
+  database:
+    container_name: postgres-database
+    image: postgres:14.5-alpine
+    restart: always
+    ports:
+      - '5432:5432'
+    env_file:
+      - ./server/sql.env
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - twitter_network
 
+  # Portal
+  client:
+    build: ./client
+    ports:
+      - '8080:80'
+    networks:
+      - twitter_network
+  
   # API server
   server:
     build: ./server
+    restart: always
     ports:
       - '5000:8080'
-    env_file: app.env
+    env_file: 
+      - ./server/server.env
+      - ./server/sql.env
+    depends_on:
+      - database
     networks:
-      - general_network
+      - twitter_network
+    volumes:
+      - static:/vol/static
 
   # Proxy
   proxy:
@@ -25,7 +54,8 @@ services:
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./proxy/uwsgi_params:/etc/nginx/uwsgi_params:ro
+      - static:/vol/static
     ports:
       - "80:80"
     networks:
-      - general_network
+      - twitter_network

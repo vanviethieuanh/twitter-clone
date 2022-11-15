@@ -24,6 +24,12 @@
           </v-row>
 
           <v-text-field
+            name="username"
+            label="Username"
+            v-model.trim="username"
+            required
+          ></v-text-field>
+          <v-text-field
             v-model.trim="email"
             label="E-mail"
             prepend-icon="mdi-email"
@@ -59,7 +65,7 @@
         <v-btn
           color="blue white--text"
           class="ml-2"
-          v-on:click="Register()"
+          v-on:click="RegisterClick()"
           depressed
           :disabled="!valid"
           >Sign Up</v-btn
@@ -70,7 +76,8 @@
 </template>
 
 <script>
-import Api from '@/services/api.js'
+import {Register} from '@/services/auth.js'
+import {CheckUsedEmail} from '@/services/user.js'
 
 export default {
   name: 'Register',
@@ -85,6 +92,7 @@ export default {
 
       first_name: '',
       last_name: '',
+      username: '',
       email: '',
       password: '',
       UsedEmail: null,
@@ -114,36 +122,29 @@ export default {
       this.$refs.form.validate()
     },
     async checkUsedEmail() {
-      Api.Public()
-        .post('used/email', {
-          email: this.email
-        })
-        .then(response => {
-          if (response.data.isTaken == 0) {
-            this.UsedEmail = null
-            return false
-          } else {
-            this.UsedEmail = 'This email have been taken!'
-            return true
-          }
-        })
+      CheckUsedEmail(this.email).then(response => {
+        if (response.data.isTaken == 0) {
+          this.UsedEmail = null
+          return false
+        } else {
+          this.UsedEmail = 'This email have been taken!'
+          return true
+        }
+      })
     },
-    async Register() {
+    async RegisterClick() {
       const used = await this.checkUsedEmail()
       if (used) return
 
-      Api.Public()
-        .post('register', {
-          last_name: this.last_name,
-          first_name: this.first_name,
-          email: this.email,
-          password: this.password
-        })
-        .then(response => {
-          this.$store.dispatch('setToken', response.data.access).then(() => {
-            this.$router.push('home')
-          })
-        })
+      await Register({
+        last_name: this.last_name,
+        first_name: this.first_name,
+        email: this.email,
+        password: this.password,
+        username: this.username
+      })
+      
+      this.$emit('log-in', true)
     }
   }
 }

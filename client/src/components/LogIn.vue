@@ -46,20 +46,21 @@
 </template>
 
 <script>
-import Api from '@/services/api.js'
+import { Login } from '@/services/auth.js'
+
 
 export default {
   name: 'LogIn',
 
   model: {
-    event: 'register'
+    event: 'register',
   },
   data() {
     return {
       email: '',
       password: '',
       serverError: [],
-      showPassword: false
+      showPassword: false,
     }
   },
   computed: {
@@ -69,26 +70,24 @@ export default {
     disableSignIn() {
       if (this.email.length * this.password.length > 0) return false
       else return true
-    }
+    },
   },
   methods: {
     logIn() {
-      Api.Public()
-        .post('login/token', {
-          username: this.email,
-          password: this.password
-        })
-        .then(response => {
-          this.$store.dispatch('setToken', response.data.access).then(() => {
+      Login(this.email, this.password)
+        .then((response) => {
+          sessionStorage.setItem("refresh_token", response.data.refresh)
+
+          this.$store.dispatch('setToken', response.data).then(() => {
             this.$router.push('home')
           })
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.response.status === 401)
             this.serverError.push('Email or password wrong!')
         })
-    }
-  }
+    },
+  },
 }
 </script>
 
