@@ -17,6 +17,7 @@ from common.helpers.doc import IdQueryParameter
 
 class PostPagination(pagination.PageNumberPagination):
     max_page_size = 100
+    page_size = 30
 
 
 class PostView(views.APIView):
